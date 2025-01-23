@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, Link, BarChart2, Settings, Plus, Search, Menu } from 'lucide-react';
+import { LayoutDashboard, Link, BarChart2, Settings, Plus, Search, Menu, LogOut } from 'lucide-react';
+import Dashboarddata from '../Components/dashboarddata';
+import Links from '../Components/links';
+import { useNavigate } from 'react-router-dom';
 import styles from '../styles/dashboard.module.css';
 
 const Dashboard = () => {
@@ -8,19 +11,9 @@ const Dashboard = () => {
   const [greeting, setGreeting] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const dateWiseClicks = [
-    { date: '21-01-25', clicks: 1234 },
-    { date: '20-01-25', clicks: 1140 },
-    { date: '19-01-25', clicks: 134 },
-    { date: '18-01-25', clicks: 34 },
-  ];
-
-  const deviceClicks = [
-    { device: 'Mobile', clicks: 134 },
-    { device: 'Desktop', clicks: 40 },
-    { device: 'Tablet', clicks: 3 },
-  ];
+  const [showLogout, setShowLogout] = useState(false);
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedUsername = localStorage.getItem('username');
@@ -55,6 +48,28 @@ const Dashboard = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/login');
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showLogout && !event.target.closest(`.${styles.avatarContainer}`)) {
+        setShowLogout(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [showLogout]);
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab); 
+  };
+
   return (
     <div className={styles.container}>
       <button className={styles.menuButton} onClick={toggleSidebar}>
@@ -64,19 +79,35 @@ const Dashboard = () => {
       <aside className={`${styles.sidebar} ${isSidebarOpen ? styles.sidebarOpen : ''}`}>
         <img src="logo.png" alt="logo" className={styles.logo} />
         <nav className={styles.nav}>
-          <a href="#" className={`${styles.navItem} ${styles.active}`}>
+          <a 
+            href="#"
+            className={`${styles.navItem} ${activeTab === 'dashboard' ? styles.active : ''}`}
+            onClick={() => handleTabChange('dashboard')}
+          >
             <LayoutDashboard size={20} />
             Dashboard
           </a>
-          <a href="#" className={styles.navItem}>
+          <a 
+            href="#"
+            className={`${styles.navItem} ${activeTab === 'links' ? styles.active : ''}`}
+            onClick={() => handleTabChange('links')}
+          >
             <Link size={20} />
             Links
           </a>
-          <a href="#" className={styles.navItem}>
+          <a 
+            href="#"
+            className={`${styles.navItem} ${activeTab === 'analytics' ? styles.active : ''}`}
+            onClick={() => handleTabChange('analytics')}
+          >
             <BarChart2 size={20} />
             Analytics
           </a>
-          <a href="#" className={styles.navItem}>
+          <a 
+            href="#"
+            className={`${styles.navItem} ${activeTab === 'settings' ? styles.active : ''}`}
+            onClick={() => handleTabChange('settings')}
+          >
             <Settings size={20} />
             Settings
           </a>
@@ -106,55 +137,30 @@ const Dashboard = () => {
                 className={styles.searchInput}
               />
             </div>
-            <div className={styles.avatar}>{userInitials}</div>
+            <div className={styles.avatarContainer}>
+              <div 
+                className={styles.avatar} 
+                onClick={() => setShowLogout(!showLogout)}
+              >
+                {userInitials}
+              </div>
+              {showLogout && (
+                <div className={styles.logoutMenu}>
+                  <button onClick={handleLogout} className={styles.logoutButton}>
+                    <LogOut size={16} />
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </header>
 
         <section className={styles.contentSection}>
-          <div className={styles.stats}>
-            <div className={styles.totalClicks}>
-              <h3>Total Clicks</h3>
-              <p className={styles.clickCount}>1234</p>
-            </div>
-          </div>
-
-          <div className={styles.charts}>
-            <div className={styles.dateWiseClicks}>
-              <h3>Date-wise Clicks</h3>
-              <div className={styles.barChart}>
-                {dateWiseClicks.map((item) => (
-                  <div key={item.date} className={styles.barGroup}>
-                    <div className={styles.barLabel}>{item.date}</div>
-                    <div className={styles.barWrapper}>
-                      <div
-                        className={styles.bar}
-                        style={{ width: `${(item.clicks / 1234) * 100}%` }}
-                      />
-                    </div>
-                    <div className={styles.barValue}>{item.clicks}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className={styles.clickDevices}>
-              <h3>Click Devices</h3>
-              <div className={styles.barChart}>
-                {deviceClicks.map((item) => (
-                  <div key={item.device} className={styles.barGroup}>
-                    <div className={styles.barLabel}>{item.device}</div>
-                    <div className={styles.barWrapper}>
-                      <div
-                        className={styles.bar}
-                        style={{ width: `${(item.clicks / 134) * 100}%` }}
-                      />
-                    </div>
-                    <div className={styles.barValue}>{item.clicks}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          {activeTab === 'dashboard' && <Dashboarddata />}
+          {activeTab === 'links' && <Links />}
+          {activeTab === 'analytics' && <Analytics />}
+          {activeTab === 'settings' && <Settings />}
         </section>
       </main>
     </div>

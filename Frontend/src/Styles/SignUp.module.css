@@ -113,3 +113,60 @@
     margin-left: 4px;
     cursor: pointer;
   }
+
+  @media (max-width: 768px) {
+    .container {
+      flex-direction: column;
+    }
+  
+    .imageSection {
+      display: none; 
+    }
+  
+    .formSection {
+      padding: 20px;
+    }
+  
+    .header {
+      margin-bottom: 40px;
+    }
+  
+    .title {
+      font-size: 20px;
+    }
+  
+    .input {
+      padding: 10px;
+      font-size: 14px;
+    }
+  
+    .registerBtn {
+      font-size: 14px;
+    }
+  
+    .loginBtn {
+      font-size: 14px;
+      padding: 6px 20px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .title {
+      font-size: 18px;
+    }
+  
+    .input {
+      padding: 8px;
+      font-size: 12px;
+    }
+  
+    .registerBtn {
+      font-size: 12px;
+    }
+  
+    .loginBtn {
+      font-size: 12px;
+      padding: 6px 16px;
+    }
+  }
+  
