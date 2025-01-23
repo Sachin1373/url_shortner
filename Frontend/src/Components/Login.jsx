@@ -1,6 +1,8 @@
 import React from 'react'
+import {  useNavigate } from 'react-router-dom'
 import styles from "../Styles/Login.module.css"
 const Login = () => {
+    const navigate = useNavigate()
   return (
     <div className={styles.container}>
           <div className={styles.imageSection}>
@@ -9,8 +11,8 @@ const Login = () => {
           
           <div className={styles.formSection}>
             <div className={styles.header}>
-              <a href="#" className={styles.signUpBtn}>SignUp</a>
-              <a href="#" className={styles.loginBtn}>Login</a>
+              <p className={styles.signUpBtn} onClick={()=> navigate('/signup')}>SignUp</p>
+              <p  className={styles.loginBtn} onClick={()=> navigate('/login')}>Login</p>
             </div>
     
             <div className={styles.formContainer}>
@@ -36,7 +38,7 @@ const Login = () => {
     
               <p className={styles.loginText}>
                 Dont't have an account?
-                <a href="#" className={styles.loginLink}>SignUp</a>
+                <p className={styles.loginLink} onClick={()=> navigate('/signup')}>SignUp</p>
               </p>
             </div>
           </div>

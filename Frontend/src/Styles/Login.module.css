@@ -41,6 +41,7 @@
     background: #2563eb;
     color: white;
     border-radius: 4px;
+    cursor: pointer;
     text-decoration: none;
   }
   
@@ -48,6 +49,7 @@
     color: #3B3C51;
     font-weight: bold;
     text-decoration: none;
+    cursor: pointer;
   }
   
   .formContainer {
@@ -99,6 +101,8 @@
   }
   
   .loginText {
+    display: flex;
+    justify-content: center;
     text-align: center;
     margin-top: 16px;
     color: #666;
@@ -107,5 +111,6 @@
   .loginLink {
     color: #2563eb;
     text-decoration: none;
+    cursor: pointer;
     margin-left: 4px;
   }
