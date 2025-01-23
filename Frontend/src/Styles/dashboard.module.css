@@ -1,219 +1,364 @@
 .container {
-    display: flex;
-    min-height: 100vh;
-    background-color: #f8fafc;
-  }
-  
-  .sidebar {
-    width: 240px;
-    background-color: white;
-    padding: 24px;
-    border-right: 1px solid #e2e8f0;
-  }
-  
-  .logo {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 40px;
-  }
-  
-  .nav {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  
-  .navItem {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px;
-    border-radius: 8px;
-    color: #64748b;
-    text-decoration: none;
-    transition: all 0.2s;
-  }
-  
-  .navItem:hover {
-    background-color: #f1f5f9;
-    color: #2563eb;
-  }
-  
-  .navItem.active {
-    background-color: #eff6ff;
-    color: #2563eb;
-  }
-  
-  .main {
-    flex: 1;
-    padding: 24px;
-  }
-  
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 32px;
-  }
-  
-  .greeting {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-  
-  .star {
-    font-size: 24px;
-  }
-  
-  .welcomeText {
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0;
-  }
-  
-  .date {
-    color: #64748b;
-    margin: 4px 0 0;
-  }
-  
-  .headerActions {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  
-  .searchContainer {
-    position: relative;
-  }
-  
-  .searchIcon {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #64748b;
-  }
-  
-  .searchInput {
-    padding: 8px 12px 8px 40px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    width: 240px;
-    font-size: 14px;
-  }
-  
-  .searchInput:focus {
-    outline: none;
-    border-color: #2563eb;
-  }
-  
-  .createButton {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background-color: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-  }
-  
-  .createButton:hover {
-    background-color: #1d4ed8;
-  }
-  
-  .avatar {
-    width: 40px;
-    height: 40px;
-    background-color: #fde68a;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 600;
-    color: #92400e;
-  }
-  
-  .stats {
-    background-color: white;
-    padding: 24px;
-    border-radius: 12px;
-    margin-bottom: 24px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-  
-  .totalClicks h3 {
-    color: #64748b;
-    font-size: 14px;
-    margin: 0 0 8px;
-  }
-  
-  .clickCount {
-    font-size: 32px;
-    font-weight: 600;
-    margin: 0;
-    color: #1e293b;
-  }
-  
+  display: flex;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  position: relative;
+}
+
+.menuButton {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 1000;
+  background: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar {
+  width: 240px;
+  background-color: white;
+  padding: 24px;
+  border-right: 1px solid #e2e8f0;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  transition: transform 0.3s ease;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  color: #64748b;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.navItem:hover {
+  background-color: #f1f5f9;
+  color: #2563eb;
+}
+
+.navItem.active {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.headerSection {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  background-color: white;
+  border-bottom: 1px solid #e2e8f0;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.greeting {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.star {
+  font-size: 24px;
+}
+
+.welcomeText {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.date {
+  color: #64748b;
+  margin: 4px 0 0;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.searchContainer {
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+}
+
+.searchInput {
+  padding: 8px 12px 8px 40px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  width: 240px;
+  font-size: 14px;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.createButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.createButton:hover {
+  background-color: #1d4ed8;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  background-color: #fde68a;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #92400e;
+  flex-shrink: 0;
+}
+
+.contentSection {
+  flex: 1;
+  padding: 24px;
+  background-color: white;
+  overflow-x: auto;
+}
+
+.stats {
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.totalClicks {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.totalClicks h3 {
+  color: black;
+  font-size: 30px;
+  margin: 0;
+}
+
+.clickCount {
+  font-size: 30px;
+  font-weight: 600;
+  margin: 0;
+  color: #1b48da;
+}
+
+.charts {
+  display: flex;
+  gap: 50px;
+  align-items: flex-start;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.dateWiseClicks,
+.clickDevices {
+  width: 100%;
+  max-width: 500px;
+  min-width: 300px;
+  height: auto;
+  min-height: 300px;
+  padding: 24px;
+  border: 1.5px solid #b6b8e1;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.charts h3 {
+  color: #1B48DA;
+  font-size: 16px;
+  margin: 0 0 24px;
+}
+
+.barChart {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.barGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.barLabel {
+  width: 80px;
+  font-size: 18px;
+  color: black;
+  font-weight: bold;
+}
+
+.barWrapper {
+  flex: 1;
+  height: 8px;
+  background-color: #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+  min-width: 100px;
+}
+
+.bar {
+  height: 100%;
+  background-color: #2563eb;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.barValue {
+  width: 48px;
+  font-size: 14px;
+  color: #64748b;
+  text-align: right;
+}
+
+@media (max-width: 1024px) {
   .charts {
-    display: grid;
-    grid-template-columns: 3fr 2fr;
-    gap: 24px;
+    flex-direction: column;
+    align-items: stretch;
   }
-  
+
   .dateWiseClicks,
   .clickDevices {
-    background-color: white;
-    padding: 24px;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    max-width: none;
   }
-  
-  .charts h3 {
-    color: #1e293b;
-    font-size: 16px;
-    margin: 0 0 24px;
+}
+
+@media (max-width: 768px) {
+  .menuButton {
+    display: block;
   }
-  
-  .barChart {
-    display: flex;
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    transform: translateX(-100%);
+    z-index: 999;
+    background: white;
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .headerSection {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .headerActions {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .searchContainer {
+    order: -1;
+    width: 100%;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+
+  .buttonText {
+    display: none;
+  }
+
+  .createButton {
+    padding: 8px;
+  }
+
+  .barLabel {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .totalClicks {
     flex-direction: column;
     gap: 16px;
+    align-items: flex-start;
   }
-  
+
+  .totalClicks h3 {
+    font-size: 24px;
+  }
+
+  .clickCount {
+    font-size: 24px;
+  }
+
   .barGroup {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    flex-wrap: wrap;
   }
-  
+
   .barLabel {
-    width: 80px;
-    font-size: 14px;
-    color: #64748b;
+    width: 100%;
+    margin-bottom: 4px;
   }
-  
-  .barWrapper {
-    flex: 1;
-    height: 8px;
-    background-color: #f1f5f9;
-    border-radius: 4px;
-    overflow: hidden;
-  }
-  
-  .bar {
-    height: 100%;
-    background-color: #2563eb;
-    border-radius: 4px;
-    transition: width 0.3s ease;
-  }
-  
+
   .barValue {
-    width: 48px;
-    font-size: 14px;
-    color: #64748b;
-    text-align: right;
+    width: auto;
+    margin-left: 8px;
   }
+}
