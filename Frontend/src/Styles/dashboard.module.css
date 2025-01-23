@@ -1,0 +1,219 @@
+.container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f8fafc;
+  }
+  
+  .sidebar {
+    width: 240px;
+    background-color: white;
+    padding: 24px;
+    border-right: 1px solid #e2e8f0;
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 40px;
+  }
+  
+  .nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .navItem {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    color: #64748b;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  
+  .navItem:hover {
+    background-color: #f1f5f9;
+    color: #2563eb;
+  }
+  
+  .navItem.active {
+    background-color: #eff6ff;
+    color: #2563eb;
+  }
+  
+  .main {
+    flex: 1;
+    padding: 24px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+  
+  .greeting {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .star {
+    font-size: 24px;
+  }
+  
+  .welcomeText {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .date {
+    color: #64748b;
+    margin: 4px 0 0;
+  }
+  
+  .headerActions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  
+  .searchContainer {
+    position: relative;
+  }
+  
+  .searchIcon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+  }
+  
+  .searchInput {
+    padding: 8px 12px 8px 40px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    width: 240px;
+    font-size: 14px;
+  }
+  
+  .searchInput:focus {
+    outline: none;
+    border-color: #2563eb;
+  }
+  
+  .createButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .createButton:hover {
+    background-color: #1d4ed8;
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    background-color: #fde68a;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #92400e;
+  }
+  
+  .stats {
+    background-color: white;
+    padding: 24px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .totalClicks h3 {
+    color: #64748b;
+    font-size: 14px;
+    margin: 0 0 8px;
+  }
+  
+  .clickCount {
+    font-size: 32px;
+    font-weight: 600;
+    margin: 0;
+    color: #1e293b;
+  }
+  
+  .charts {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 24px;
+  }
+  
+  .dateWiseClicks,
+  .clickDevices {
+    background-color: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .charts h3 {
+    color: #1e293b;
+    font-size: 16px;
+    margin: 0 0 24px;
+  }
+  
+  .barChart {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .barGroup {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .barLabel {
+    width: 80px;
+    font-size: 14px;
+    color: #64748b;
+  }
+  
+  .barWrapper {
+    flex: 1;
+    height: 8px;
+    background-color: #f1f5f9;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .bar {
+    height: 100%;
+    background-color: #2563eb;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+  
+  .barValue {
+    width: 48px;
+    font-size: 14px;
+    color: #64748b;
+    text-align: right;
+  }
