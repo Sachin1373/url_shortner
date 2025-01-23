@@ -24,7 +24,7 @@ app.get("/api/v1", (req, res) => {
     res.send("Welcome to the URL SHORTNER backend API!");
 });
 
-app.use("api/v1/auth",Auth)
+app.use("/api/v1/auth",Auth)
 
 
 app.listen(PORT, () => {
