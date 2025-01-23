@@ -1,0 +1,100 @@
+.modal {
+    position: fixed;
+    top:-110px;
+    left: -100px;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5); 
+    opacity: 1;
+    z-index: 9999; 
+  }
+  
+  .modalContent {
+    position: relative;
+    width: 540px;
+    height: 261px;
+    background-color: white;
+    border-radius: 5px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 20px;
+    opacity: 1; 
+  }
+
+  .cross{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .modalContent p{
+    font-size: 20px;
+  }
+
+  .heading {
+    font-family: Open Sans;
+    font-size: 27.33px;
+    font-weight: 600;
+    line-height: 41px;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;    
+    color: white;
+  }
+  
+  .folderInput {
+    width: 100%;
+    height: 53px;
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    background-color: #1F1F23;
+    font-size: 16px;
+  }
+  
+  .buttons {
+    width: 100%;
+    display: flex;
+    padding: 0 15px;
+    align-items: center;
+    justify-content: space-between;
+   
+  }
+  
+  .NoButton, .YesButton {
+    width: 40%;
+    height: auto;
+    border-radius: 6px;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 41px;
+    text-align: center;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;    
+    cursor: pointer;
+    border: none;
+  }
+  
+  .YesButton {
+    background-color:#007bff ;
+    color: white;
+  }
+  
+  .cancelButton {
+    background-color: black;
+    color: white;
+  }
+  
+  .divider {
+    width: 1px;
+    height: 35px;
+    background-color: #47474A;
+  }
+  

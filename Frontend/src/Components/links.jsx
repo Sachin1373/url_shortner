@@ -1,10 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdEdit } from "react-icons/md";
 import { Copy } from 'lucide-react';
+import Deletelink from '../modals/deletelink';
 import styles from '../Styles/links.module.css';
 
 const LinksTable = () => {
+
+    const [deletemodal,setdeletemodal] = useState(false)
+
+    const opendeletemodal = () =>{
+          setdeletemodal(true)
+    }
+
+    const closedeletemodal = () =>{
+        setdeletemodal(false)
+    }
+
   const data = [
     {
       date: 'Jan 14, 2025 16:30',
@@ -42,6 +54,7 @@ const LinksTable = () => {
 
   return (
     <table className={styles.linksTable}>
+       {deletemodal ? <Deletelink closedeletemodal={closedeletemodal}  /> : null}
       <thead>
         <tr>
           <th>Date</th>
@@ -75,7 +88,7 @@ const LinksTable = () => {
             <td>
               <div className={styles.actions}>
                 <MdEdit className={styles.edit} />
-                <RiDeleteBin6Line className={styles.delete} />
+                <RiDeleteBin6Line className={styles.delete} onClick={opendeletemodal} />
               </div>
             </td>
           </tr>

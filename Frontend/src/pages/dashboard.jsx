@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { LayoutDashboard, Link, BarChart2, Settings, Plus, Search, Menu, LogOut } from 'lucide-react';
 import Dashboarddata from '../Components/dashboarddata';
 import Links from '../Components/links';
+import Setting from '../Components/settings';
+import Analytics from '../Components/analytics';
 import { useNavigate } from 'react-router-dom';
 import styles from '../styles/dashboard.module.css';
 
@@ -160,7 +162,7 @@ const Dashboard = () => {
           {activeTab === 'dashboard' && <Dashboarddata />}
           {activeTab === 'links' && <Links />}
           {activeTab === 'analytics' && <Analytics />}
-          {activeTab === 'settings' && <Settings />}
+          {activeTab === 'settings' && <Setting />}
         </section>
       </main>
     </div>
