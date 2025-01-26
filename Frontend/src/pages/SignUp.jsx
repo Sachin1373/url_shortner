@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import styles from '../styles/SignUp.module.css';
 
+
 const SignUp = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -34,7 +35,9 @@ const SignUp = () => {
 
      
       toast.success(response.data.message || "Registration successful!");
-      navigate('/login');
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (error) {
      
       const errorMessage = error.response?.data?.message || "Something went wrong!";
