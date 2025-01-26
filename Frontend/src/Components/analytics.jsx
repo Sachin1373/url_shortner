@@ -63,15 +63,10 @@ function Analytics() {
               </div>
             </td>
             <td>{row.ip}</td>
-            <td className={row.status === 'Active' ? styles.active : styles.inactive}>
+            <td className={styles.linkCell}>
               {row.Device}
             </td>
-            {/* <td>
-              <div className={styles.actions}>
-                <MdEdit className={styles.edit} />
-                <RiDeleteBin6Line className={styles.delete} />
-              </div>
-            </td> */}
+           
           </tr>
         ))}
       </tbody>

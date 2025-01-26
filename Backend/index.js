@@ -3,6 +3,7 @@ import cors from "cors"
 import dotenv from "dotenv"
 import databaseconnect from "./src/db/databaseconnect.js";
 import Auth from "./src/routes/Auth.js"
+import Link from "./src/routes/Links.js"
 
 
 dotenv.config({
@@ -25,6 +26,7 @@ app.get("/api/v1", (req, res) => {
 });
 
 app.use("/api/v1/auth",Auth)
+app.use("/api/v1/link",Link)
 
 
 app.listen(PORT, () => {

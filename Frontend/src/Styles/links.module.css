@@ -1,120 +1,185 @@
-
+.linksTableContainer {
+  width: 100%;
+  overflow-x: auto; /* Enables horizontal scrolling for small screens */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
 
 .linksTable {
-    width: 100%;
-    border-collapse: collapse;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  }
-  
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 0.1px solid #e2e8f0;
+}
+
+.linksTable th,
+.linksTable td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 0.1px solid #e2e8f0;
+  white-space: nowrap; 
+}
+
+.linksTable th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.linksTable td {
+  background-color: #ffffff;
+  color: #1e293b;
+}
+
+.linkCell {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.linkContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shortLinkText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 220px;
+}
+
+.copyIcon {
+  cursor: pointer;
+  color: #64748b;
+  transition: color 0.2s;
+}
+
+.copyIcon:hover {
+  color: #2563eb;
+}
+
+/* Column widths */
+th:nth-child(1),
+td:nth-child(1) {
+  width: 200px;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  width: 250px;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+  width: 250px;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+  width: 150px;
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+  width: 100px;
+}
+
+th:nth-child(6),
+td:nth-child(6) {
+  width: 120px;
+}
+
+th:nth-child(7),
+td:nth-child(7) {
+  width: 120px;
+}
+
+.linksTable td.active {
+  color: #166534 !important;
+}
+
+.linksTable td.inactive {
+  color: #92400e !important;
+}
+
+.actions {
+  display: flex;
+  justify-content: space-around;
+}
+
+.edit,
+.delete {
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.2s;
+}
+
+.edit:hover {
+  color: #2563eb;
+}
+
+.delete:hover {
+  color: #ef4444;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
   .linksTable th,
   .linksTable td {
-    padding: 12px 16px;
-    text-align: left;
-    border-bottom: 1px solid #e2e8f0;
+    padding: 8px 12px;
+    font-size: 14px; /* Adjust font size for smaller screens */
   }
-  
-  .linksTable th {
-    background-color: #f8fafc;
-    font-weight: 600;
-    color: #64748b;
-  }
-  
-  .linksTable td {
-    color: #1e293b;
-  }
-  
-  .linkCell {
-    max-width: 250px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-  
-  .linkContainer {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  
+
   .shortLinkText {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 220px; 
+    max-width: 180px; /* Adjust link truncation for smaller screens */
   }
-  
-  .copyIcon {
-    cursor: pointer;
-    color: #64748b;
-    transition: color 0.2s;
-  }
-  
-  .copyIcon:hover {
-    color: #2563eb;
-  }
-  
- 
+
   th:nth-child(1),
   td:nth-child(1) {
-    width: 150px; 
+    width: 150px;
   }
-  
+
   th:nth-child(2),
-  td:nth-child(2) {
-    width: 250px; 
-  }
-  
+  td:nth-child(2),
   th:nth-child(3),
   td:nth-child(3) {
-    width: 250px; 
+    max-width: 200px; /* Narrower columns for small screens */
   }
-  
-  th:nth-child(4),
-  td:nth-child(4) {
-    width: 150px; 
+
+  .copyIcon {
+    width: 18px; /* Smaller icon size */
+    height: 18px;
   }
-  
-  th:nth-child(5),
-  td:nth-child(5) {
-    width: 100px; 
+}
+
+@media screen and (max-width: 480px) {
+  .linksTableContainer {
+    border: none;
+    box-shadow: none;
   }
-  
-  th:nth-child(6),
-  td:nth-child(6) {
-    width: 120px; 
+
+  .linksTable th,
+  .linksTable td {
+    padding: 6px 8px;
+    font-size: 12px; /* Smaller font size for extra-small screens */
   }
-  
-  th:nth-child(7),
-  td:nth-child(7) {
-    width: 120px; 
+
+  .shortLinkText {
+    max-width: 120px;
   }
-  
-  
-  .linksTable td.active {
-    color: #166534 !important; 
+
+  .edit,
+  .delete {
+    font-size: 14px;
   }
-  
-  .linksTable td.inactive {
-    color: #92400e !important; 
+
+  .copyIcon {
+    width: 16px;
+    height: 16px;
   }
-  
-  .actions {
-    display: flex;
-    justify-content: space-around;
-  }
-  
-  .edit, .delete {
-    cursor: pointer;
-    color: #64748b;
-    transition: all 0.2s;
-  }
-  
-  .edit:hover {
-    color: #2563eb;
-  }
-  
-  .delete:hover {
-    color: #ef4444;
-  }
-  
+}

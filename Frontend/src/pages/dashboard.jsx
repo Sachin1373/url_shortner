@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { LayoutDashboard, Link, BarChart2, Settings, Plus, Search, Menu, LogOut } from 'lucide-react';
 import Dashboarddata from '../Components/dashboarddata';
 import Links from '../Components/links';
+import { FaArrowTrendUp } from "react-icons/fa6";
+import { IoIosLink } from "react-icons/io";
 import CreatLink from '../modals/createlink';
 import Setting from '../Components/settings';
 import Analytics from '../Components/analytics';
@@ -109,7 +111,8 @@ const Dashboard = () => {
             className={`${styles.navItem} ${activeTab === 'links' ? styles.active : ''}`}
             onClick={() => handleTabChange('links')}
           >
-            <Link size={20} />
+            
+            <IoIosLink size={20} />
             Links
           </a>
           <a 
@@ -117,7 +120,7 @@ const Dashboard = () => {
             className={`${styles.navItem} ${activeTab === 'analytics' ? styles.active : ''}`}
             onClick={() => handleTabChange('analytics')}
           >
-            <BarChart2 size={20} />
+            <FaArrowTrendUp size={20} />
             Analytics
           </a>
           <a 

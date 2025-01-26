@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, Calendar } from 'lucide-react';
+import axios from 'axios';
 import styles from "../styles/createlink.module.css";
 
 function CreateLink({  closecreatelinkmodal }) {
@@ -10,11 +11,32 @@ function CreateLink({  closecreatelinkmodal }) {
     hasExpiration: false
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log(formData);
-    onClose();
+
+    try {
+    
+      const data = {
+        originalUrl: formData.destinationUrl,
+        remarks: formData.remarks,
+        expiresAt: formData.hasExpiration ? formData.expiration : null
+      };
+
+ 
+      const response = await axios.post('http://localhost:5000/api/v1/link/create-link', data, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`, 
+        }
+      });
+
+      console.log('Link created:', response.data);
+
+      closecreatelinkmodal();
+    } catch (error) {
+      console.error('Error creating link:', error);
+      alert('There was an error creating the link');
+    }
   };
 
   const handleChange = (e) => {
@@ -25,7 +47,7 @@ function CreateLink({  closecreatelinkmodal }) {
     }));
   };
 
-//   if (!isOpen) return null;
+
 
   return (
     <div className={styles.modalOverlay}>

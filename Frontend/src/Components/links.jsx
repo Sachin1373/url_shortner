@@ -1,71 +1,72 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdEdit } from "react-icons/md";
-import Editlink from '../modals/editlink';
-import { Copy } from 'lucide-react';
-import Deletelink from '../modals/deletelink';
-import styles from '../Styles/links.module.css';
+import Editlink from "../modals/editlink";
+import { Copy } from "lucide-react";
+import Deletelink from "../modals/deletelink";
+import axios from "axios";
+import styles from "../Styles/links.module.css";
 
 const LinksTable = () => {
+  const [deletemodal, setdeletemodal] = useState(false);
+  const [editlinkmodal, seteditlinkmodal] = useState(false);
+  const [links, setLinks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    const [deletemodal,setdeletemodal] = useState(false)
-    const [editlinkmodal,seteditlinkmodal] = useState(false)
+  const openeditlinkmodal = () => {
+    seteditlinkmodal(true);
+  };
 
-    const openeditlinkmodal = () =>{
-        seteditlinkmodal(true)
-    }
+  const closeeditlinkmodal = () => {
+    seteditlinkmodal(false);
+  };
 
-    const closeeditlinkmodal = () =>{
-        seteditlinkmodal(false)
+  const opendeletemodal = () => {
+    setdeletemodal(true);
+  };
 
-    }
-
-    const opendeletemodal = () =>{
-          setdeletemodal(true)
-    }
-
-    const closedeletemodal = () =>{
-        setdeletemodal(false)
-    }
-
-  const data = [
-    {
-      date: 'Jan 14, 2025 16:30',
-      originalLink: 'https://docs.google.com/document/d/1hKwvvtIufHXOTSvmzZboXhG_zN',
-      shortLink: 'https://lc/campaign1',
-      remarks: 'campaign1',
-      clicks: 5,
-      status: 'Active',
-    },
-    {
-      date: 'Jan 14, 2025 05:45',
-      originalLink: 'https://docs.google.com/document/d/1hKwvvtIufHXOTSvmzZboXhG_zN',
-      shortLink: 'https://lc/campaign2',
-      remarks: 'campaign2',
-      clicks: 5,
-      status: 'Inactive',
-    },
-    {
-      date: 'Jan 14, 2025 07:43',
-      originalLink: 'https://docs.google.com/document/d/1hKwvvtIufHXOTSvmzZboXhG_zN',
-      shortLink: 'https://lc/campaign3',
-      remarks: 'campaign3',
-      clicks: 5,
-      status: 'Inactive',
-    },
-  ];
+  const closedeletemodal = () => {
+    setdeletemodal(false);
+  };
 
   const copyToClipboard = (link) => {
-    navigator.clipboard.writeText(link).then(() => {
-      alert('Short link copied to clipboard!');
-    }).catch(err => {
-      console.error('Error copying text: ', err);
-    });
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        alert("Short link copied to clipboard!");
+      })
+      .catch((err) => {
+        console.error("Error copying text: ", err);
+      });
   };
+
+  // Fetch links from the API
+  useEffect(() => {
+    const fetchLinks = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/api/v1/link/get-links", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Replace this with your auth token logic
+          },
+        });
+        setLinks(response.data);
+      } catch (error) {
+        console.error("Error fetching links:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLinks();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <table className={styles.linksTable}>
-       {deletemodal ? <Deletelink closedeletemodal={closedeletemodal}  /> : null}
+      {deletemodal ? <Deletelink closedeletemodal={closedeletemodal} /> : null}
       <thead>
         <tr>
           <th>Date</th>
@@ -78,23 +79,30 @@ const LinksTable = () => {
         </tr>
       </thead>
       <tbody>
-        {data.map((row, index) => (
+        {links.map((link, index) => (
           <tr key={index}>
-            <td>{row.date}</td>
-            <td className={styles.linkCell}>{row.originalLink}</td>
+            <td>{new Date(link.createdAt).toLocaleString()}</td>
+            <td className={styles.linkCell}>{link.originalUrl}</td>
             <td className={styles.linkCell}>
               <div className={styles.linkContainer}>
-                <span className={styles.shortLinkText}>{row.shortLink}</span>
-                <Copy 
-                  className={styles.copyIcon} 
-                  onClick={() => copyToClipboard(row.shortLink)} 
+                <span className={styles.shortLinkText}>
+                  http://localhost:5000/api/v1/link/{link.shortCode}
+                </span>
+                <Copy
+                  className={styles.copyIcon}
+                  onClick={() => copyToClipboard(`http://localhost:5000/api/v1/link/${link.shortCode}`)}
+                  size={30}
                 />
               </div>
             </td>
-            <td>{row.remarks}</td>
-            <td>{row.clicks}</td>
-            <td className={row.status === 'Active' ? styles.active : styles.inactive}>
-              {row.status}
+            <td>{link.remarks}</td>
+            <td>{link.clicks}</td>
+            <td
+              className={
+                link.isActive ? styles.active : styles.inactive
+              }
+            >
+              {link.isActive ? "Active" : "Inactive"}
             </td>
             <td>
               <div className={styles.actions}>
@@ -106,8 +114,7 @@ const LinksTable = () => {
         ))}
       </tbody>
 
-     {editlinkmodal ? <Editlink closeeditlinkmodal={closeeditlinkmodal} /> : null}
-
+      {editlinkmodal ? <Editlink closeeditlinkmodal={closeeditlinkmodal} /> : null}
     </table>
   );
 };
