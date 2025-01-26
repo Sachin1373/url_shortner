@@ -1,0 +1,216 @@
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modalContent {
+    background: white;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    margin: 20px;
+  }
+  
+  .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px 0 0 0;
+    padding: 10px;
+    margin-bottom: 24px;
+    background-color: #3B3C51;
+  }
+  
+  .modalHeader h2 {
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+  }
+  
+  .closeButton {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+  }
+  
+  .closeButton:hover {
+    background-color: #f1f5f9;
+    color: #1e293b;
+  }
+  
+  .formGroup {
+    margin-bottom: 20px;
+    padding: 24px;
+  }
+  
+  .formGroup label {
+    display: block;
+    color: #1e293b;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  
+  .required {
+    color: #ef4444;
+    margin-left: 4px;
+  }
+  
+  .formGroup input[type="url"],
+  .formGroup input[type="datetime-local"],
+  .formGroup textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #1e293b;
+    transition: border-color 0.2s;
+  }
+  
+  .formGroup textarea {
+    height: 100px;
+    resize: vertical;
+  }
+  
+  .formGroup input:focus,
+  .formGroup textarea:focus {
+    outline: none;
+    border-color: #2563eb;
+  }
+  
+  .expirationHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+  }
+  
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e2e8f0;
+    transition: 0.4s;
+    border-radius: 34px;
+  }
+  
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .slider {
+    background-color: #2563eb;
+  }
+  
+  input:checked + .slider:before {
+    transform: translateX(20px);
+  }
+  
+  .dateInputWrapper {
+    position: relative;
+  }
+  
+  .calendarIcon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    pointer-events: none;
+  }
+  
+  .modalFooter {
+    display: flex;
+    background-color: #c5c7e3;
+    justify-content: space-between;
+    padding: 12px;
+    border-radius: 0 0 0 8px;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  
+  .clearButton,
+  .createButton {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .clearButton {
+    background: none;
+    border: none;
+    color: #353c45;
+  }
+  
+  .clearButton:hover {
+    background-color: #f1f5f9;
+    color: #1e293b;
+  }
+  
+  .createButton {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+  }
+  
+  .createButton:hover {
+    background-color: #1d4ed8;
+  }
+  
+  @media (max-width: 480px) {
+    .modalContent {
+      margin: 16px;
+     
+    }
+   
+    
+    .clearButton,
+    .createButton {
+      width: 100%;
+      padding: 12px;
+    }
+  }

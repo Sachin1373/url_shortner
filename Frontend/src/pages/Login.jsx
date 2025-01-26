@@ -40,6 +40,7 @@ const Login = () => {
   return (
     <div className={styles.container}>
       <ToastContainer />
+      
       <div className={styles.imageSection}>
         <img src="logo.png" alt="logo" className={styles.logo} />
       </div>

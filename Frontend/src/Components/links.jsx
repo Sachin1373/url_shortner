@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdEdit } from "react-icons/md";
+import Editlink from '../modals/editlink';
 import { Copy } from 'lucide-react';
 import Deletelink from '../modals/deletelink';
 import styles from '../Styles/links.module.css';
@@ -8,6 +9,16 @@ import styles from '../Styles/links.module.css';
 const LinksTable = () => {
 
     const [deletemodal,setdeletemodal] = useState(false)
+    const [editlinkmodal,seteditlinkmodal] = useState(false)
+
+    const openeditlinkmodal = () =>{
+        seteditlinkmodal(true)
+    }
+
+    const closeeditlinkmodal = () =>{
+        seteditlinkmodal(false)
+
+    }
 
     const opendeletemodal = () =>{
           setdeletemodal(true)
@@ -87,13 +98,16 @@ const LinksTable = () => {
             </td>
             <td>
               <div className={styles.actions}>
-                <MdEdit className={styles.edit} />
+                <MdEdit className={styles.edit} onClick={openeditlinkmodal} />
                 <RiDeleteBin6Line className={styles.delete} onClick={opendeletemodal} />
               </div>
             </td>
           </tr>
         ))}
       </tbody>
+
+     {editlinkmodal ? <Editlink closeeditlinkmodal={closeeditlinkmodal} /> : null}
+
     </table>
   );
 };

@@ -109,7 +109,7 @@ export const updateProfile = async (req, res) => {
 export const deleteAccount = async (req, res) => {
     
       const userId = req.userId; 
-      console.log('Deleting account for userId:', userId);
+      
   
       const user = await User.findById(userId);
   

@@ -91,12 +91,12 @@
   }
   
   
-  .active {
-    color: #166534;
+  .linksTable td.active {
+    color: #166534 !important; 
   }
   
-  .inactive {
-    color: #92400e;
+  .linksTable td.inactive {
+    color: #92400e !important; 
   }
   
   .actions {

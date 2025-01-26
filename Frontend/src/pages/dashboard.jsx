@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { LayoutDashboard, Link, BarChart2, Settings, Plus, Search, Menu, LogOut } from 'lucide-react';
 import Dashboarddata from '../Components/dashboarddata';
 import Links from '../Components/links';
+import CreatLink from '../modals/createlink';
 import Setting from '../Components/settings';
 import Analytics from '../Components/analytics';
 import { useNavigate } from 'react-router-dom';
@@ -13,9 +14,18 @@ const Dashboard = () => {
   const [greeting, setGreeting] = useState('');
   const [currentDate, setCurrentDate] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [showLogout, setShowLogout] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [showLogout, setShowLogout] = useState(false);
+  const [createlinkmodal, setcreatelinkmodal] = useState(false);
   const navigate = useNavigate();
+
+  const opencreatelinkmodal = () => {
+    setcreatelinkmodal(true);
+  };
+
+  const closecreatelinkmodal = () => {
+    setcreatelinkmodal(false);
+  };
 
   useEffect(() => {
     const storedUsername = localStorage.getItem('username');
@@ -55,6 +65,11 @@ const Dashboard = () => {
     navigate('/login');
   };
 
+  const toggleLogout = (e) => {
+    e.stopPropagation();
+    setShowLogout(!showLogout);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (showLogout && !event.target.closest(`.${styles.avatarContainer}`)) {
@@ -69,7 +84,7 @@ const Dashboard = () => {
   }, [showLogout]);
 
   const handleTabChange = (tab) => {
-    setActiveTab(tab); 
+    setActiveTab(tab);
   };
 
   return (
@@ -77,7 +92,7 @@ const Dashboard = () => {
       <button className={styles.menuButton} onClick={toggleSidebar}>
         <Menu size={24} />
       </button>
-
+     
       <aside className={`${styles.sidebar} ${isSidebarOpen ? styles.sidebarOpen : ''}`}>
         <img src="logo.png" alt="logo" className={styles.logo} />
         <nav className={styles.nav}>
@@ -127,9 +142,9 @@ const Dashboard = () => {
           </div>
 
           <div className={styles.headerActions}>
-            <button className={styles.createButton}>
+            <button className={styles.createButton} onClick={opencreatelinkmodal}>
               <Plus size={20} />
-              <span className={styles.buttonText}>Create new</span>
+              <span className={styles.buttonText} >Create new</span>
             </button>
             <div className={styles.searchContainer}>
               <Search size={20} className={styles.searchIcon} />
@@ -140,19 +155,14 @@ const Dashboard = () => {
               />
             </div>
             <div className={styles.avatarContainer}>
-              <div 
-                className={styles.avatar} 
-                onClick={() => setShowLogout(!showLogout)}
-              >
+              <div className={styles.avatar} onClick={toggleLogout}>
                 {userInitials}
               </div>
               {showLogout && (
-                <div className={styles.logoutMenu}>
-                  <button onClick={handleLogout} className={styles.logoutButton}>
-                    <LogOut size={16} />
-                    Logout
-                  </button>
-                </div>
+                <button className={styles.logoutButton} onClick={handleLogout}>
+                  {/* <LogOut size={16} /> */}
+                  Logout
+                </button>
               )}
             </div>
           </div>
@@ -164,6 +174,10 @@ const Dashboard = () => {
           {activeTab === 'analytics' && <Analytics />}
           {activeTab === 'settings' && <Setting />}
         </section>
+        
+        {createlinkmodal && <CreatLink closecreatelinkmodal={closecreatelinkmodal}  />} 
+       
+        
       </main>
     </div>
   );
