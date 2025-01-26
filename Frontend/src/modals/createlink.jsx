@@ -30,9 +30,8 @@ function CreateLink({  closecreatelinkmodal }) {
         }
       });
 
-      console.log('Link created:', response.data);
-
       closecreatelinkmodal();
+    
     } catch (error) {
       console.error('Error creating link:', error);
       alert('There was an error creating the link');

@@ -31,10 +31,36 @@ export const createLink = async (req, res) => {
 
 // Get all links for a user
 export const getLinks = async (req, res) => {
+  const { page = 1, limit = 8 } = req.query;
+  const skip = (page - 1) * limit;
+
   try {
     const links = await Link.find({ userId: req.userId })
-      .sort({ createdAt: -1 });
-    res.json(links);
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    const totalLinks = await Link.countDocuments({ userId: req.userId });
+
+    res.json({
+      links,
+      currentPage: page,
+      totalPages: Math.ceil(totalLinks / limit),
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+// Get a single link
+export const getLink = async (req, res) => {
+  try {
+    const link = await Link.findOne({ _id: req.params.id, userId: req.userId });
+    if (!link) {
+      return res.status(404).json({ error: 'Link not found' });
+    }
+    res.json(link);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -54,6 +80,23 @@ export const updateLinkStatus = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+//Edit a link
+export const editLink = async (req, res) => {
+  try {
+    const { originalUrl, remarks, expiresAt } = req.body;
+    const link = await 
+    Link.findOneAndUpdate(
+      { _id: req.params.id, userId: req.userId },
+      { originalUrl, remarks, expiresAt },
+      { new: true }
+    );
+    res.json(link);
+    }
+    catch (error) {
+    res.status(500).json({ error: error.message });
+    }
+}
 
 // Delete a link
 export const deleteLink = async (req, res) => {

@@ -1,9 +1,4 @@
-.linksTableContainer {
-  width: 100%;
-  overflow-x: auto; /* Enables horizontal scrolling for small screens */
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
+
 
 .linksTable {
   width: 100%;
@@ -127,6 +122,54 @@ td:nth-child(7) {
   color: #ef4444;
 }
 
+
+
+.pagination {
+  position: absolute;
+  bottom: 18px;
+  left: 52%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pagination button,
+.pagination .page-number {
+  padding: 8px 15px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:disabled,
+.pagination .page-number:disabled {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
+.pagination button:hover:not(:disabled),
+.pagination .page-number:hover:not(:disabled) {
+  background-color: #007bff;
+  color: white;
+}
+
+.pagination .page-number.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.pagination span {
+  font-size: 16px;
+  margin: 0 10px;
+}
+
+
+
 /* Responsive Design */
 @media screen and (max-width: 768px) {
   .linksTable th,
@@ -142,6 +185,10 @@ td:nth-child(7) {
   th:nth-child(1),
   td:nth-child(1) {
     width: 150px;
+  }
+
+  .pagination{
+    left: 30%;
   }
 
   th:nth-child(2),
@@ -172,6 +219,11 @@ td:nth-child(7) {
   .shortLinkText {
     max-width: 120px;
   }
+
+  .pagination{
+    left: 30%;
+  }
+
 
   .edit,
   .delete {

@@ -1,32 +1,94 @@
-import React,{useState} from 'react'
-import styles from '../styles/editlink.module.css'
-import { X, Calendar } from 'lucide-react'
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import styles from "../styles/editlink.module.css";
+import { X, Calendar } from "lucide-react";
 
-function Editlink({closeeditlinkmodal}) {
+function Editlink({ closeeditlinkmodal, linkID, refreshLinks }) {
+  const [linkdata, setLinkData] = useState(null);
+  const [formData, setFormData] = useState({
+    destinationUrl: "",
+    remarks: "",
+    expiration: "",
+    hasExpiration: false,
+  });
 
-    const [formData, setFormData] = useState({
-        destinationUrl: '',
-        remarks: '',
-        expiration: '',
-        hasExpiration: false
+  // Helper to format ISO date to datetime-local
+  const formatDateTimeLocal = (isoString) => {
+    const date = new Date(isoString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
+  };
+
+  // Fetch link data
+  const getLinkData = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5000/api/v1/link/getlink/${linkID}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      const data = response.data;
+      setLinkData(data);
+      setFormData({
+        destinationUrl: data.originalUrl || "",
+        remarks: data.remarks || "",
+        expiration: data.expiresAt ? formatDateTimeLocal(data.expiresAt) : "",
+        hasExpiration: !!data.expiresAt,
       });
+    } catch (error) {
+      console.error("Error fetching link data:", error.message);
+      alert("There was an error fetching the link data");
+    }
+  };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Handle form submission logic here
-        console.log(formData);
-        onClose();
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const data = {
+        originalUrl: formData.destinationUrl,
+        remarks: formData.remarks,
+        expiresAt: formData.hasExpiration ? formData.expiration : null,
       };
 
-      const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-          ...prev,
-          [name]: value
-        }));
-      };
+      const response = await axios.patch(
+        `http://localhost:5000/api/v1/link/edit/${linkID}`,
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      closeeditlinkmodal();
+      refreshLinks();
+    } catch (error) {
+      console.error("Error updating link:", error.message);
+      alert("There was an error updating the link");
+    }
+  };
 
+  // Handle form input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
+  useEffect(() => {
+    getLinkData();
+  }, []);
 
   return (
     <div className={styles.modalOverlay}>
@@ -75,10 +137,13 @@ function Editlink({closeeditlinkmodal}) {
                 <input
                   type="checkbox"
                   checked={formData.hasExpiration}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    hasExpiration: e.target.checked
-                  }))}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      hasExpiration: e.target.checked,
+                      expiration: e.target.checked ? prev.expiration : "",
+                    }))
+                  }
                 />
                 <span className={styles.slider}></span>
               </label>
@@ -98,15 +163,17 @@ function Editlink({closeeditlinkmodal}) {
           </div>
 
           <div className={styles.modalFooter}>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className={styles.clearButton}
-              onClick={() => setFormData({
-                destinationUrl: '',
-                remarks: '',
-                expiration: '',
-                hasExpiration: false
-              })}
+              onClick={() =>
+                setFormData({
+                  destinationUrl: "",
+                  remarks: "",
+                  expiration: "",
+                  hasExpiration: false,
+                })
+              }
             >
               Clear
             </button>
@@ -117,7 +184,7 @@ function Editlink({closeeditlinkmodal}) {
         </form>
       </div>
     </div>
-  )
+  );
 }
 
-export default Editlink
+export default Editlink;
