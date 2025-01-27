@@ -6,7 +6,7 @@
 
 .imageSection {
   flex: 1;
-  background-image: url('auth.png');
+  background-image: url('/Frontend/public/auth.png');
   background-size: cover;
   background-position: center;
   position: relative;
