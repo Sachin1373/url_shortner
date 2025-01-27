@@ -22,7 +22,7 @@ function DeleteAccount({closedeleteaccmodal}) {
         }
       
         try {
-          const response = await axios.delete('http://localhost:5000/api/v1/auth/deleteaccount', {
+          const response = await axios.delete('https://url-shortner-0tbr.onrender.com/api/v1/auth/deleteaccount', {
             headers: {
               Authorization: `Bearer ${token}`,
             },

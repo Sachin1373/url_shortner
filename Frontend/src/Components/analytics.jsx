@@ -13,7 +13,7 @@ function Analytics() {
   useEffect(() => {
     const fetchAnalyticsData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/v1/link/getclickanalytics', {
+        const response = await axios.get('https://url-shortner-0tbr.onrender.com/api/v1/link/getclickanalytics', {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -74,10 +74,10 @@ function Analytics() {
               </td>
               <td className={styles.linkCell}>
                 <div className={styles.linkContainer}>
-                  <span className={styles.shortLinkText}>http://localhost:5000/api/v1/link/{row.shortCode}</span>
+                  <span className={styles.shortLinkText}>https://url-shortner-0tbr.onrender.com/{row.shortCode}</span>
                   <Copy 
                     className={styles.copyIcon} 
-                    onClick={() => copyToClipboard(`http://localhost:5000/api/v1/link/${row.shortCode}`)} 
+                    onClick={() => copyToClipboard(`https://url-shortner-0tbr.onrender.com/${row.shortCode}`)} 
                   />
                 </div>
               </td>

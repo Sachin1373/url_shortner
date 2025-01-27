@@ -32,7 +32,7 @@ const SignUp = () => {
 
     try {
     
-      const response = await axios.post("http://localhost:5000/api/v1/auth/signup", formData);
+      const response = await axios.post("https://url-shortner-0tbr.onrender.com/api/v1/auth/signup", formData);
 
      
       toast.success(response.data.message || "Registration successful!");

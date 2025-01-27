@@ -23,7 +23,7 @@ function CreateLink({  closecreatelinkmodal }) {
       };
 
  
-      const response = await axios.post('http://localhost:5000/api/v1/link/create-link', data, {
+      const response = await axios.post('https://url-shortner-0tbr.onrender.com/api/v1/link/create-link', data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`, 

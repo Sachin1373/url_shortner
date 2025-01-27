@@ -24,7 +24,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5000/api/v1/auth/login', formData);
+      const response = await axios.post('https://url-shortner-0tbr.onrender.com/api/v1/auth/login', formData);
       toast.success(response.data.message || 'Login successful!');
       
       const { token, username } = response.data;

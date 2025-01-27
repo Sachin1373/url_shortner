@@ -15,7 +15,7 @@ function Deletelink({closedeletemodal,linkID,refreshLinks}) {
 
      const deletelink = async() =>{
         try {
-            const response = await axios.delete(`http://localhost:5000/api/v1/link/delete/${linkID}`, {
+            const response = await axios.delete(`https://url-shortner-0tbr.onrender.com/api/v1/link/delete/${linkID}`, {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem("token")}`, 
               },

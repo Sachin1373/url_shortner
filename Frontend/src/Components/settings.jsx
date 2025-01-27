@@ -35,7 +35,7 @@ function Settings() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/v1/auth/updateprofile', {
+      const response = await fetch('https://url-shortner-0tbr.onrender.com/api/v1/auth/updateprofile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

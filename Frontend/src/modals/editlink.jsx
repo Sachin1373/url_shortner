@@ -27,7 +27,7 @@ function Editlink({ closeeditlinkmodal, linkID, refreshLinks }) {
   const getLinkData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/v1/link/getlink/${linkID}`,
+        `https://url-shortner-0tbr.onrender.com/api/v1/link/getlink/${linkID}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -60,7 +60,7 @@ function Editlink({ closeeditlinkmodal, linkID, refreshLinks }) {
       };
 
       const response = await axios.patch(
-        `http://localhost:5000/api/v1/link/edit/${linkID}`,
+        `https://url-shortner-0tbr.onrender.com/api/v1/link/edit/${linkID}`,
         data,
         {
           headers: {

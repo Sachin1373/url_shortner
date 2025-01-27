@@ -11,7 +11,7 @@ function Dashboarddata() {
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/v1/link/getdashboardstats', {
+        const response = await axios.get('https://url-shortner-0tbr.onrender.com/api/v1/link/getdashboardstats', {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`

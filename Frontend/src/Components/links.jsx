@@ -52,7 +52,7 @@ const LinksTable = ({searchTerm}) => {
   const fetchLinks = async (page = 1) => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/api/v1/link/get-links", {
+      const response = await axios.get("https://url-shortner-0tbr.onrender.com/api/v1/link/get-links", {
         params: { page, limit: 8 },
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
@@ -70,7 +70,7 @@ const LinksTable = ({searchTerm}) => {
   const searchbyremarks = async (remarks) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/api/v1/link/getlinksbyremarks/${remarks}`, {
+      const response = await axios.get(`https://url-shortner-0tbr.onrender.com/api/v1/link/getlinksbyremarks/${remarks}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
      
@@ -121,11 +121,11 @@ const LinksTable = ({searchTerm}) => {
               <td className={styles.linkCell}>
                 <div className={styles.linkContainer}>
                   <span className={styles.shortLinkText}>
-                    http://localhost:5000/api/v1/link/{link.shortCode}
+                  https://url-shortner-0tbr.onrender.com/{link.shortCode}
                   </span>
                   <Copy
                     className={styles.copyIcon}
-                    onClick={() => copyToClipboard(`http://localhost:5000/api/v1/link/${link.shortCode}`)}
+                    onClick={() => copyToClipboard(`https://url-shortner-0tbr.onrender.com/api/v1/link/${link.shortCode}`)}
                     size={30}
                   />
                 </div>
