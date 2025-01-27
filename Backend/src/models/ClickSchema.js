@@ -22,6 +22,11 @@ const clickSchema = new mongoose.Schema({
     type: String,
     enum: ['Mobile', 'Desktop', 'Tablet'],
     required: true
+  },
+  userId: {  
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',  
+    required: true
   }
 });
 

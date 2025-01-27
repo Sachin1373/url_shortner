@@ -164,16 +164,18 @@ export const redirectAndTrackClicks = async (req, res) => {
     if (result.device.type === 'mobile') device = 'Mobile';
     else if (result.device.type === 'tablet') device = 'Tablet';
 
-   
+    
+    const userId = req.userId; 
+
     const click = new Click({
       linkId: link._id,
-      ipAddress: req.ip,
+      ipAddress: req.headers['x-forwarded-for']?.split(',')[0] || req.ip,
       userAgent: req.headers['user-agent'],
-      device
+      device,
+      userId 
     });
     await click.save();
 
-  
     await Link.findByIdAndUpdate(link._id, { $inc: { clicks: 1 } });
 
     res.redirect(link.originalUrl);
@@ -181,6 +183,7 @@ export const redirectAndTrackClicks = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // Get analytics for a specific link
 export const getLinkAnalytics = async (req, res) => {
@@ -234,24 +237,27 @@ export const getLinkAnalytics = async (req, res) => {
 
 export const getDashboardStats = async (req, res) => {
   try {
-   
-    const totalClicks = await Click.countDocuments();
+    const userId = req.userId; 
 
-    
+    const totalClicks = await Click.countDocuments({ userId: mongoose.Types.ObjectId(userId) });
+
     const dateWiseClicks = await Click.aggregate([
       {
+        $match: { userId: mongoose.Types.ObjectId(userId) } 
+      },
+      {
         $group: {
-          _id: {
-            $dateToString: { format: "%d-%m-%Y", date: "$timestamp" },
-          },
+          _id: { $dateToString: { format: "%d-%m-%Y", date: "$timestamp" } },
           clicks: { $sum: 1 }
         }
       },
-      { $sort: { _id: -1 } } 
+      { $sort: { _id: -1 } }
     ]);
 
-  
     const deviceClicks = await Click.aggregate([
+      {
+        $match: { userId: mongoose.Types.ObjectId(userId) } 
+      },
       {
         $group: {
           _id: "$device",
@@ -260,7 +266,6 @@ export const getDashboardStats = async (req, res) => {
       }
     ]);
 
-    
     res.json({
       totalClicks,
       dateWiseClicks,
@@ -272,13 +277,18 @@ export const getDashboardStats = async (req, res) => {
   }
 };
 
+
 export const getClickAnalytics = async (req, res) => {
   try {
+    const userId = req.userId; 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 8;
     const skip = (page - 1) * limit;
 
     const clicks = await Click.aggregate([
+      {
+        $match: { userId: mongoose.Types.ObjectId(userId) } 
+      },
       {
         $lookup: {
           from: 'links',
@@ -307,7 +317,7 @@ export const getClickAnalytics = async (req, res) => {
       }
     ]);
 
-    const totalClicks = await Click.countDocuments();
+    const totalClicks = await Click.countDocuments({ userId: mongoose.Types.ObjectId(userId) });
 
     if (clicks.length === 0) {
       return res.status(404).json({ message: 'No click data found.' });
