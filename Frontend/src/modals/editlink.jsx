@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import styles from "../styles/editlink.module.css";
+import styles from "../Styles/editlink.module.css";
 import { X, Calendar } from "lucide-react";
 
 function Editlink({ closeeditlinkmodal, linkID, refreshLinks }) {

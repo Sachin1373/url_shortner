@@ -14,7 +14,7 @@ import Links from "../Components/links";
 import CreatLink from "../modals/createlink";
 import Setting from "../Components/settings";
 import Analytics from "../Components/analytics";
-import styles from "../styles/dashboard.module.css";
+import styles from "../Styles/dashboard.module.css";
 
 const Dashboard = () => {
   const [userInitials, setUserInitials] = useState("");
