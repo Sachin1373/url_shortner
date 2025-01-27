@@ -124,7 +124,6 @@ export const redirectAndTrackClicks = async (req, res) => {
       return res.status(410).json({ error: 'Link is inactive or expired' });
     }
 
-    // Parse user agent
     const parser = new UAParser(req.headers['user-agent']);
     const result = parser.getResult();
     let device = 'Desktop';
@@ -132,7 +131,7 @@ export const redirectAndTrackClicks = async (req, res) => {
     if (result.device.type === 'mobile') device = 'Mobile';
     else if (result.device.type === 'tablet') device = 'Tablet';
 
-    // Record click
+   
     const click = new Click({
       linkId: link._id,
       ipAddress: req.ip,
@@ -141,7 +140,7 @@ export const redirectAndTrackClicks = async (req, res) => {
     });
     await click.save();
 
-    // Update click count
+  
     await Link.findByIdAndUpdate(link._id, { $inc: { clicks: 1 } });
 
     res.redirect(link.originalUrl);
@@ -162,7 +161,7 @@ export const getLinkAnalytics = async (req, res) => {
       return res.status(404).json({ error: 'Link not found' });
     }
 
-    // Get clicks by date
+    
     const clicksByDate = await Click.aggregate([
       { $match: { linkId: link._id } },
       {
@@ -176,7 +175,7 @@ export const getLinkAnalytics = async (req, res) => {
       { $sort: { "_id": -1 } }
     ]);
 
-    // Get clicks by device
+   
     const clicksByDevice = await Click.aggregate([
       { $match: { linkId: link._id } },
       {

@@ -170,16 +170,16 @@ td:nth-child(7) {
 
 
 
-/* Responsive Design */
+
 @media screen and (max-width: 768px) {
   .linksTable th,
   .linksTable td {
     padding: 8px 12px;
-    font-size: 14px; /* Adjust font size for smaller screens */
+    font-size: 14px; 
   }
 
   .shortLinkText {
-    max-width: 180px; /* Adjust link truncation for smaller screens */
+    max-width: 180px; 
   }
 
   th:nth-child(1),
@@ -195,11 +195,11 @@ td:nth-child(7) {
   td:nth-child(2),
   th:nth-child(3),
   td:nth-child(3) {
-    max-width: 200px; /* Narrower columns for small screens */
+    max-width: 200px; 
   }
 
   .copyIcon {
-    width: 18px; /* Smaller icon size */
+    width: 18px; 
     height: 18px;
   }
 }
@@ -213,7 +213,7 @@ td:nth-child(7) {
   .linksTable th,
   .linksTable td {
     padding: 6px 8px;
-    font-size: 12px; /* Smaller font size for extra-small screens */
+    font-size: 12px; 
   }
 
   .shortLinkText {
