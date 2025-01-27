@@ -42,7 +42,7 @@ const Login = () => {
       <ToastContainer />
       
       <div className={styles.imageSection}>
-        <img src="logo.png" alt="logo" className={styles.logo} />
+        <img src="/logo.png" alt="logo" className={styles.logo} />
       </div>
 
       <div className={styles.formSection}>
