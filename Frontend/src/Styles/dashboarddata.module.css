@@ -1,189 +1,190 @@
 .stats {
-    padding: 24px;
-    border-radius: 12px;
-    margin-bottom: 24px;
-  }
-  
-  .totalClicks {
-    display: flex;
-    gap: 40px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  
-  .totalClicks h3 {
-    color: black;
-    font-size: 30px;
-    margin: 0;
-  }
-  
-  .clickCount {
-    font-size: 30px;
-    font-weight: 600;
-    margin: 0;
-    color: #1b48da;
-  }
-  
+  padding: 24px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.totalClicks {
+  display: flex;
+  gap: 40px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.totalClicks h3 {
+  color: black;
+  font-size: 30px;
+  margin: 0;
+}
+
+.clickCount {
+  font-size: 30px;
+  font-weight: 600;
+  margin: 0;
+  color: #1b48da;
+}
+
+.charts {
+  display: flex;
+  gap: 50px;
+  align-items: flex-start;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.dateWiseClicks,
+.clickDevices {
+  width: 100%;
+  max-width: 500px;
+  min-width: 300px;
+  height: auto;
+  min-height: 450px;
+  padding: 24px;
+  border: 1.5px solid #b6b8e1;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.charts h3 {
+  color: #1B48DA;
+  font-size: 16px;
+  margin: 0 0 24px;
+}
+
+.barChart {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.barGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.barLabel {
+  width: 100px; 
+  font-size: 16px;
+  color: black;
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 4px;
+}
+
+.barWrapper {
+  flex: 1;
+  height: 15px;
+  background-color: #f1f5f9;
+  overflow: hidden;
+  min-width: 100px;
+}
+
+.bar {
+  height: 100%;
+  background-color: #2563eb;
+  transition: width 0.3s ease;
+}
+
+.barValue {
+  font-size: 14px;
+  color: #64748b;
+  text-align: right;
+  width: 48px;
+}
+
+@media (max-width: 1024px) {
   .charts {
-    display: flex;
-    gap: 50px;
-    align-items: flex-start;
-    justify-content: space-around;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch;
   }
-  
+
   .dateWiseClicks,
   .clickDevices {
+    max-width: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .menuButton {
+    display: block;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    transform: translateX(-100%);
+    z-index: 999;
+    background: white;
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .headerSection {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .headerActions {
     width: 100%;
-    max-width: 500px;
-    min-width: 300px;
-    height: auto;
-    min-height: 300px;
-    padding: 24px;
-    border: 1.5px solid #b6b8e1;
-    border-radius: 12px;
-    margin-bottom: 24px;
+    justify-content: space-between;
   }
-  
-  .charts h3 {
-    color: #1B48DA;
-    font-size: 16px;
-    margin: 0 0 24px;
+
+  .searchContainer {
+    order: -1;
+    width: 100%;
   }
-  
-  .barChart {
-    display: flex;
+
+  .searchInput {
+    width: 100%;
+  }
+
+  .buttonText {
+    display: none;
+  }
+
+  .createButton {
+    padding: 8px;
+  }
+
+  .barLabel {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .totalClicks {
     flex-direction: column;
     gap: 16px;
+    align-items: flex-start;
   }
-  
+
+  .totalClicks h3 {
+    font-size: 24px;
+  }
+
+  .clickCount {
+    font-size: 24px;
+  }
+
   .barGroup {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+    flex-wrap: wrap;
   }
-  
+
   .barLabel {
-    width: 80px;
-    font-size: 18px;
-    color: black;
-    font-weight: bold;
+    width: 100%;
+    margin-bottom: 4px;
   }
-  
-  .barWrapper {
-    flex: 1;
-    height: 8px;
-    background-color: #f1f5f9;
-    border-radius: 4px;
-    overflow: hidden;
-    min-width: 100px;
-  }
-  
-  .bar {
-    height: 100%;
-    background-color: #2563eb;
-    border-radius: 4px;
-    transition: width 0.3s ease;
-  }
-  
+
   .barValue {
-    width: 48px;
-    font-size: 14px;
-    color: #64748b;
-    text-align: right;
+    width: auto;
+    margin-left: 8px;
   }
-  
-  @media (max-width: 1024px) {
-    .charts {
-      flex-direction: column;
-      align-items: stretch;
-    }
-  
-    .dateWiseClicks,
-    .clickDevices {
-      max-width: none;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .menuButton {
-      display: block;
-    }
-  
-    .sidebar {
-      position: fixed;
-      left: 0;
-      transform: translateX(-100%);
-      z-index: 999;
-      background: white;
-    }
-  
-    .sidebarOpen {
-      transform: translateX(0);
-    }
-  
-    .main {
-      margin-left: 0;
-    }
-  
-    .headerSection {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .headerActions {
-      width: 100%;
-      justify-content: space-between;
-    }
-  
-    .searchContainer {
-      order: -1;
-      width: 100%;
-    }
-  
-    .searchInput {
-      width: 100%;
-    }
-  
-    .buttonText {
-      display: none;
-    }
-  
-    .createButton {
-      padding: 8px;
-    }
-  
-    .barLabel {
-      font-size: 14px;
-    }
-  }
-  
-  @media (max-width: 480px) {
-    .totalClicks {
-      flex-direction: column;
-      gap: 16px;
-      align-items: flex-start;
-    }
-  
-    .totalClicks h3 {
-      font-size: 24px;
-    }
-  
-    .clickCount {
-      font-size: 24px;
-    }
-  
-    .barGroup {
-      flex-wrap: wrap;
-    }
-  
-    .barLabel {
-      width: 100%;
-      margin-bottom: 4px;
-    }
-  
-    .barValue {
-      width: auto;
-      margin-left: 8px;
-    }
-  }
+}

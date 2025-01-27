@@ -7,7 +7,7 @@ import Deletelink from "../modals/deletelink";
 import axios from "axios";
 import styles from "../Styles/links.module.css";
 
-const LinksTable = () => {
+const LinksTable = ({searchTerm}) => {
   const [deletemodal, setdeletemodal] = useState(false);
   const [editlinkmodal, seteditlinkmodal] = useState(false);
   const [links, setLinks] = useState([]);
@@ -20,6 +20,8 @@ const LinksTable = () => {
     setLinkID(linkID);
     seteditlinkmodal(true);
   };
+
+
 
   const closeeditlinkmodal = () => {
     setLinkID("");
@@ -51,15 +53,11 @@ const LinksTable = () => {
     setLoading(true);
     try {
       const response = await axios.get("http://localhost:5000/api/v1/link/get-links", {
-        params: {
-          page,
-          limit: 8, 
-        },
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        params: { page, limit: 8 },
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      setLinks(response.data.links);
+      const linksData = response.data.links;
+      setLinks(Array.isArray(linksData) ? linksData : []);
       setCurrentPage(response.data.currentPage);
       setTotalPages(response.data.totalPages);
     } catch (error) {
@@ -68,10 +66,34 @@ const LinksTable = () => {
       setLoading(false);
     }
   };
+  
+  const searchbyremarks = async (remarks) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`http://localhost:5000/api/v1/link/getlinksbyremarks/${remarks}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+     
+      setLinks(Array.isArray(response.data.links) ? response.data.links : []);
+    } catch (error) {
+      console.error("Error fetching links by remarks:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
 
   useEffect(() => {
-    fetchLinks(currentPage);
-  }, [currentPage]);
+    if (searchTerm) {
+      searchbyremarks(searchTerm);
+    } else {
+      fetchLinks(currentPage);
+    }
+  }, [searchTerm, currentPage]);
+
+
+ 
 
   if (loading) {
     return <div>Loading...</div>;

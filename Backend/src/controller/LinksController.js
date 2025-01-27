@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid';
 import Link from '../models/LinkSchema.js';
 import Click from '../models/ClickSchema.js';
+import moment from 'moment';
 import {UAParser} from 'ua-parser-js';
 import dotenv from 'dotenv';
 
@@ -65,6 +66,38 @@ export const getLink = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Get links by remarks
+
+export const getLinksByRemarks = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1; 
+    const limit = parseInt(req.query.limit) || 8; 
+    const skip = (page - 1) * limit;
+
+    if (!req.params.remarks) {
+      return res.status(400).json({ error: "Remarks parameter is required." });
+    }
+
+    const links = await Link.find({
+      remarks: { $regex: req.params.remarks, $options: "i" }, 
+      userId: req.userId,
+    })
+      .skip(skip)
+      .limit(limit);
+
+    if (links.length === 0) {
+      return res.status(404).json({ message: "No links found for the given remarks." });
+    }
+
+    res.json({ links, currentPage: page, totalLinks: links.length });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
 
 // Update link status (active/inactive)
 export const updateLinkStatus = async (req, res) => {
@@ -190,6 +223,103 @@ export const getLinkAnalytics = async (req, res) => {
       totalClicks: link.clicks,
       clicksByDate,
       clicksByDevice
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
+
+export const getDashboardStats = async (req, res) => {
+  try {
+   
+    const totalClicks = await Click.countDocuments();
+
+    
+    const dateWiseClicks = await Click.aggregate([
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%d-%m-%Y", date: "$timestamp" },
+          },
+          clicks: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: -1 } } 
+    ]);
+
+  
+    const deviceClicks = await Click.aggregate([
+      {
+        $group: {
+          _id: "$device",
+          clicks: { $sum: 1 }
+        }
+      }
+    ]);
+
+    
+    res.json({
+      totalClicks,
+      dateWiseClicks,
+      deviceClicks
+    });
+  } catch (error) {
+    console.error("Error fetching stats:", error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+export const getClickAnalytics = async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 8;
+    const skip = (page - 1) * limit;
+
+    const clicks = await Click.aggregate([
+      {
+        $lookup: {
+          from: 'links',
+          localField: 'linkId',
+          foreignField: '_id',
+          as: 'linkDetails'
+        }
+      },
+      {
+        $unwind: '$linkDetails'
+      },
+      {
+        $project: {
+          timestamp: 1,
+          originalUrl: '$linkDetails.originalUrl',
+          shortCode: '$linkDetails.shortCode',
+          ipAddress: 1,
+          device: 1
+        }
+      },
+      {
+        $skip: skip
+      },
+      {
+        $limit: limit
+      }
+    ]);
+
+    const totalClicks = await Click.countDocuments();
+
+    if (clicks.length === 0) {
+      return res.status(404).json({ message: 'No click data found.' });
+    }
+
+    res.json({
+      clicks,
+      pagination: {
+        currentPage: page,
+        totalPages: Math.ceil(totalClicks / limit),
+        totalClicks: totalClicks
+      }
     });
   } catch (error) {
     res.status(500).json({ error: error.message });

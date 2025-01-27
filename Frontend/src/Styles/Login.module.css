@@ -1,7 +1,7 @@
 .container {
   display: flex;
   height: 100vh;
-  flex-wrap: wrap; /* Allows the layout to stack on smaller screens */
+  flex-wrap: wrap; 
 }
 
 .imageSection {

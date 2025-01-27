@@ -12,7 +12,7 @@ function Editlink({ closeeditlinkmodal, linkID, refreshLinks }) {
     hasExpiration: false,
   });
 
-  // Helper to format ISO date to datetime-local
+  
   const formatDateTimeLocal = (isoString) => {
     const date = new Date(isoString);
     const year = date.getFullYear();
@@ -23,7 +23,7 @@ function Editlink({ closeeditlinkmodal, linkID, refreshLinks }) {
     return `${year}-${month}-${day}T${hours}:${minutes}`;
   };
 
-  // Fetch link data
+
   const getLinkData = async () => {
     try {
       const response = await axios.get(
@@ -49,7 +49,7 @@ function Editlink({ closeeditlinkmodal, linkID, refreshLinks }) {
     }
   };
 
-  // Handle form submission
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -77,7 +77,7 @@ function Editlink({ closeeditlinkmodal, linkID, refreshLinks }) {
     }
   };
 
-  // Handle form input changes
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
