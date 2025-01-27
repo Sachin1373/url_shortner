@@ -74,10 +74,10 @@ function Analytics() {
               </td>
               <td className={styles.linkCell}>
                 <div className={styles.linkContainer}>
-                  <span className={styles.shortLinkText}>https://url-shortner-0tbr.onrender.com/{row.shortCode}</span>
+                  <span className={styles.shortLinkText}>https://url-shortner-0tbr.onrender.com/link{row.shortCode}</span>
                   <Copy 
                     className={styles.copyIcon} 
-                    onClick={() => copyToClipboard(`https://url-shortner-0tbr.onrender.com/${row.shortCode}`)} 
+                    onClick={() => copyToClipboard(`https://url-shortner-0tbr.onrender.com/link${row.shortCode}`)} 
                   />
                 </div>
               </td>
