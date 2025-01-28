@@ -149,11 +149,7 @@ export const deleteLink = async (req, res) => {
 // Redirect and track clicks
 export const redirectAndTrackClicks = async (req, res) => {
   try {
-    const { shortCode } = req.params; // Get the shortcode from the URL params
-    const { username } = req.query;   // Get the username from the query params
-
-    // Find the link by shortcode
-    const link = await Link.findOne({ shortCode });
+    const link = await Link.findOne({ shortCode: req.params.shortCode });
 
     if (!link) {
       return res.status(404).json({ error: 'Link not found' });
@@ -164,7 +160,7 @@ export const redirectAndTrackClicks = async (req, res) => {
       return res.status(410).json({ error: 'Link is inactive or expired' });
     }
 
-    // Parse the user agent to detect device type
+    // Parse the user-agent to determine device type
     const parser = new UAParser(req.headers['user-agent']);
     const result = parser.getResult();
     let device = 'Desktop';
@@ -172,25 +168,30 @@ export const redirectAndTrackClicks = async (req, res) => {
     if (result.device.type === 'mobile') device = 'Mobile';
     else if (result.device.type === 'tablet') device = 'Tablet';
 
-    // Create a new click document to save the click data
+    // Extract the user ID if available (null for unauthenticated users)
+    const userId = req.userId || null;
+
+    // Track the click
     const click = new Click({
       linkId: link._id,
       ipAddress: req.headers['x-forwarded-for']?.split(',')[0] || req.ip,
       userAgent: req.headers['user-agent'],
       device,
-      username, // Save the username
+      userId,
     });
     await click.save();
 
     // Increment the click count for the link
     await Link.findByIdAndUpdate(link._id, { $inc: { clicks: 1 } });
 
-    // Send the original URL back to the frontend for redirection
+    // Redirect the user to the original URL
     res.json({ url: link.originalUrl });
   } catch (error) {
+    console.error('Error redirecting and tracking clicks:', error.message);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 
@@ -277,7 +278,7 @@ export const getClickAnalytics = async (req, res) => {
 
 export const getLinkClicks = async (req, res) => {
   try {
-    // const { userId } = req.userId; 
+    
     const { page = 1, limit = 8 } = req.query; 
 
     const link = await Link.findOne({ userId: req.userId });
@@ -286,21 +287,21 @@ export const getLinkClicks = async (req, res) => {
       return res.status(404).json({ error: 'Link not found for the given userId' });
     }
 
-    // Pagination logic
+    
     const clicks = await Click.find({ linkId: link._id })
-      .skip((page - 1) * limit) // Skip records based on current page
-      .limit(parseInt(limit))  // Limit records per page
-      .sort({ timestamp: -1 }); // Optional: Sort by most recent clicks
+      .skip((page - 1) * limit) 
+      .limit(parseInt(limit))  
+      .sort({ timestamp: -1 }); 
 
-    const totalClicks = await Click.countDocuments({ linkId: link._id }); // Total clicks for this link
+    const totalClicks = await Click.countDocuments({ linkId: link._id }); 
 
-    const totalPages = Math.ceil(totalClicks / limit); // Calculate total pages
+    const totalPages = Math.ceil(totalClicks / limit); 
 
     if (clicks.length === 0) {
       return res.status(404).json({ message: 'No clicks found for this link' });
     }
 
-    // Map the clicks to include necessary data
+    
     const clickData = clicks.map(click => ({
       ipAddress: click.ipAddress,
       userAgent: click.userAgent,

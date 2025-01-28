@@ -23,10 +23,6 @@ const clickSchema = new mongoose.Schema({
     enum: ['Mobile', 'Desktop', 'Tablet'],
     required: true
   },
-  username: {
-    type: String,
-    required: true
-  },
   userId: {  
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',  

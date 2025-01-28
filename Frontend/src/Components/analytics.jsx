@@ -4,6 +4,8 @@ import axios from 'axios';
 import styles from "../Styles/links.module.css";
 
 function Analytics() {
+  const [originalUrl, setOriginalUrl] = useState('');
+  const [shortCode, setShortCode] = useState('');
   const [data, setData] = useState([]); 
   const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null); 
@@ -23,8 +25,12 @@ function Analytics() {
             limit: 8
           }
         });
+        setOriginalUrl(response.data.originalUrl);
+        setShortCode(response.data.shortCode);
         const analyticsData = response.data.clicks;
         setData(analyticsData);
+        // Ensure that currentPage is an integer
+        setCurrentPage(parseInt(response.data.pagination.currentPage, 10));
         setTotalPages(response.data.pagination.totalPages); 
       } catch (error) {
         console.error('Error fetching analytics data:', error);
@@ -43,6 +49,12 @@ function Analytics() {
     }).catch(err => {
       console.error('Error copying text: ', err);
     });
+  };
+
+  const formatUserAgent = (userAgent) => {
+    const regex = /^[A-Za-z]+\/[0-9\.]+/; 
+    const match = userAgent.match(regex);
+    return match ? match[0] : userAgent; 
   };
 
   if (loading) {
@@ -70,20 +82,20 @@ function Analytics() {
             <tr key={index}>
               <td>{new Date(row.timestamp).toLocaleString()}</td> 
               <td className={styles.linkCell}>
-                <a href={row.originalLink} target="_blank" rel="noopener noreferrer">{row.originalUrl}</a>
+                <a href={row.originalUrl} target="_blank" rel="noopener noreferrer">{originalUrl}</a>
               </td>
               <td className={styles.linkCell}>
                 <div className={styles.linkContainer}>
-                  <span className={styles.shortLinkText}>https://url-shortner-0tbr.onrender.com/link/{row.shortCode}</span>
+                  <span className={styles.shortLinkText}>https://url-shortner-0tbr.onrender.com/link/{shortCode}</span>
                   <Copy 
                     className={styles.copyIcon} 
-                    onClick={() => copyToClipboard(`https://url-shortner-0tbr.onrender.com/link/${row.shortCode}`)} 
+                    onClick={() => copyToClipboard(`https://url-shortner-three-sigma.vercel.app/redirect/${shortCode}`)} 
                   />
                 </div>
               </td>
               <td>{row.ipAddress}</td> 
               <td className={styles.linkCell}>
-                {row.device}
+                {formatUserAgent(row.userAgent)}
               </td>
             </tr>
           ))}
