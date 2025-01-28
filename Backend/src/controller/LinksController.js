@@ -306,11 +306,11 @@ export const getLinkClicks = async (req, res) => {
 
     // For each link, get the associated clicks and calculate the total number of clicks
     for (const link of links) {
-      // Fetch clicks for the current link
+      // Fetch clicks for the current link (paginated)
       const clicks = await Click.find({ linkId: link._id })
-        .skip((page - 1) * limit)
-        .limit(parseInt(limit))
-        .sort({ timestamp: -1 });
+        .skip((page - 1) * limit) // Skip previous pages
+        .limit(parseInt(limit)) // Limit to the number of clicks per page
+        .sort({ timestamp: -1 }); // Sort by timestamp (most recent first)
 
       // Map the click data
       const clickData = clicks.map(click => ({
@@ -332,9 +332,12 @@ export const getLinkClicks = async (req, res) => {
     // Calculate the total pages for pagination
     const totalPages = Math.ceil(totalClicks / limit);
 
-    // Respond with the flattened data
+    // Paginate the final merged data array (only return clicks for the current page)
+    const paginatedData = allClickData.slice((page - 1) * limit, page * limit);
+
+    // Respond with the flattened and paginated data
     res.json({
-      clicks: allClickData,
+      clicks: paginatedData,
       pagination: {
         totalPages,
         currentPage: page,
