@@ -37,7 +37,6 @@ function Redirect() {
   return (
     <div>
       <ToastContainer />
-       <h1>Redirect</h1>
     </div>
   )
 }

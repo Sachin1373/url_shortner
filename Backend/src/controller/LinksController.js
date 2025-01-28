@@ -11,7 +11,7 @@ dotenv.config({
     path:'./.env'
 });
 
-// Create a new short link
+
 export const createLink = async (req, res) => {
   try {
     const { originalUrl, remarks, expiresAt } = req.body;
@@ -32,7 +32,7 @@ export const createLink = async (req, res) => {
   }
 };
 
-// Get all links for a user
+
 export const getLinks = async (req, res) => {
   const { page = 1, limit = 8 } = req.query;
   const skip = (page - 1) * limit;
@@ -56,7 +56,7 @@ export const getLinks = async (req, res) => {
 };
 
 
-// Get a single link
+
 export const getLink = async (req, res) => {
   try {
     const link = await Link.findOne({ _id: req.params.id, userId: req.userId });
@@ -69,7 +69,7 @@ export const getLink = async (req, res) => {
   }
 };
 
-// Get links by remarks
+
 
 export const getLinksByRemarks = async (req, res) => {
   try {
@@ -101,7 +101,7 @@ export const getLinksByRemarks = async (req, res) => {
 
 
 
-// Update link status (active/inactive)
+
 export const updateLinkStatus = async (req, res) => {
   try {
     const { isActive } = req.body;
@@ -116,7 +116,7 @@ export const updateLinkStatus = async (req, res) => {
   }
 };
 
-//Edit a link
+
 export const editLink = async (req, res) => {
   try {
     const { originalUrl, remarks, expiresAt } = req.body;
@@ -133,7 +133,7 @@ export const editLink = async (req, res) => {
     }
 }
 
-// Delete a link
+
 export const deleteLink = async (req, res) => {
   try {
     await Link.findOneAndDelete({
@@ -146,7 +146,7 @@ export const deleteLink = async (req, res) => {
   }
 };
 
-// Redirect and track clicks
+
 export const redirectAndTrackClicks = async (req, res) => {
   try {
     const link = await Link.findOne({ shortCode: req.params.shortCode });
@@ -155,12 +155,12 @@ export const redirectAndTrackClicks = async (req, res) => {
       return res.status(404).json({ error: 'Link not found' });
     }
 
-    // Check if the link is active or expired
+   
     if (!link.isActive || (link.expiresAt && new Date() > link.expiresAt)) {
       return res.status(410).json({ error: 'Link is inactive or expired' });
     }
 
-    // Parse the user-agent to determine browser, operating system, and device type
+    
     const parser = new UAParser(req.headers['user-agent']);
     const result = parser.getResult();
 
@@ -173,7 +173,7 @@ export const redirectAndTrackClicks = async (req, res) => {
     const os = result.os.name || 'Unknown OS';
   
 
-    // Track the click with parsed details
+    
     const click = new Click({
       linkId: link._id,
       ipAddress: req.headers['x-forwarded-for']?.split(',')[0] || req.ip,
@@ -185,10 +185,10 @@ export const redirectAndTrackClicks = async (req, res) => {
 
     await click.save();
 
-    // Increment the click count for the link
+    
     await Link.findByIdAndUpdate(link._id, { $inc: { clicks: 1 } });
 
-    // Redirect the user to the original URL
+    
     res.json({ url: link.originalUrl });
   } catch (error) {
     console.error('Error redirecting and tracking clicks:', error.message);
@@ -203,26 +203,26 @@ export const getClickAnalytics = async (req, res) => {
   try {
     const userId = req.userId;
 
-    // Validate userId
+    
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ success: false, error: "Invalid user ID" });
     }
 
-    // Fetch all the linkIds associated with the user
-    const links = await Link.find({ userId: userId }).select('_id'); // Assuming Link model has a userId field
+    
+    const links = await Link.find({ userId: userId }).select('_id'); 
 
     if (links.length === 0) {
       return res.status(404).json({ success: false, error: "No links found for the user" });
     }
 
-    // Get the list of linkIds
+    
     const linkIds = links.map(link => link._id);
 
-    // Debugging Logs
+   
     console.log("Fetching analytics for user ID:", userId);
     console.log("Link IDs associated with the user:", linkIds);
 
-    // Get total clicks across all the links
+    
     const totalClicks = await Click.countDocuments({ linkId: { $in: linkIds } });
     console.log("Total Clicks:", totalClicks);
 
@@ -237,7 +237,7 @@ export const getClickAnalytics = async (req, res) => {
       });
     }
 
-    // Get date-wise clicks
+    
     const dateWiseClicks = await Click.aggregate([
       { $match: { linkId: { $in: linkIds } } },
       {
@@ -251,7 +251,7 @@ export const getClickAnalytics = async (req, res) => {
     ]);
     console.log("Date-wise Clicks:", dateWiseClicks);
 
-    // Get device-wise clicks
+    
     const deviceWiseClicks = await Click.aggregate([
       { $match: { linkId: { $in: linkIds } } },
       {
@@ -263,7 +263,7 @@ export const getClickAnalytics = async (req, res) => {
     ]);
     console.log("Device-wise Clicks:", deviceWiseClicks);
 
-    // Return success response
+    
     res.json({
       success: true,
       data: {
@@ -279,7 +279,7 @@ export const getClickAnalytics = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching analytics:", error); // Log full error
+    console.error("Error fetching analytics:", error); 
     res.status(500).json({
       success: false,
       error: error.message || "Error fetching click analytics",
@@ -293,49 +293,49 @@ export const getLinkClicks = async (req, res) => {
   try {
     const { page = 1, limit = 8 } = req.query;
 
-    // Fetch all links for the given userId
+  
     const links = await Link.find({ userId: req.userId });
 
     if (links.length === 0) {
       return res.status(404).json({ message: 'No links found for the given userId' });
     }
 
-    // Prepare an array to store all click data
+    
     let allClickData = [];
     let totalClicks = 0;
 
-    // For each link, get the associated clicks and calculate the total number of clicks
+   
     for (const link of links) {
-      // Fetch clicks for the current link (paginated)
+     
       const clicks = await Click.find({ linkId: link._id })
-        .skip((page - 1) * limit) // Skip previous pages
-        .limit(parseInt(limit)) // Limit to the number of clicks per page
-        .sort({ timestamp: -1 }); // Sort by timestamp (most recent first)
+        .skip((page - 1) * limit) 
+        .limit(parseInt(limit)) 
+        .sort({ timestamp: -1 });
 
-      // Map the click data
+      
       const clickData = clicks.map(click => ({
         originalUrl: link.originalUrl,
         shortCode: link.shortCode,
         ipAddress: click.ipAddress,
-        userAgent: click.os, // Assuming only OS is stored
-        timestamp: click.timestamp, // Including timestamp
-        device: click.device, // Including device type
+        userAgent: click.os, 
+        timestamp: click.timestamp, 
+        device: click.device, 
       }));
 
-      // Merge the click data into the allClickData array
+     
       allClickData = [...allClickData, ...clickData];
 
-      // Count the total clicks for this link
+    
       totalClicks += await Click.countDocuments({ linkId: link._id });
     }
 
-    // Calculate the total pages for pagination
+   
     const totalPages = Math.ceil(totalClicks / limit);
 
-    // Paginate the final merged data array (only return clicks for the current page)
+    
     const paginatedData = allClickData.slice((page - 1) * limit, page * limit);
 
-    // Respond with the flattened and paginated data
+  
     res.json({
       clicks: paginatedData,
       pagination: {
