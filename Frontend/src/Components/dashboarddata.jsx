@@ -5,24 +5,24 @@ import styles from "../Styles/dashboarddata.module.css";
 function Dashboarddata() {
   const [totalClicks, setTotalClicks] = useState(0);
   const [dateWiseClicks, setDateWiseClicks] = useState([]);
-  const [deviceClicks, setDeviceClicks] = useState([]);
+  const [deviceWiseClicks, setDeviceWiseClicks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const response = await axios.get('https://url-shortner-0tbr.onrender.com/api/v1/link/getdashboardstats', {
+        const response = await axios.get('https://url-shortner-0tbr.onrender.com/api/v1/link/getclickanalytics', {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
-        }
-        ); 
-        const { totalClicks, dateWiseClicks, deviceClicks } = response.data;
+        });
+
+        const { totalClicks, dateWiseClicks, deviceWiseClicks } = response.data.data;
 
         setTotalClicks(totalClicks);
         setDateWiseClicks(dateWiseClicks);
-        setDeviceClicks(deviceClicks);
+        setDeviceWiseClicks(deviceWiseClicks);
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       } finally {
@@ -47,12 +47,13 @@ function Dashboarddata() {
       </div>
 
       <div className={styles.charts}>
+        {/* Date-wise Clicks */}
         <div className={styles.dateWiseClicks}>
           <h3>Date-wise Clicks</h3>
           <div className={styles.barChart}>
             {dateWiseClicks.map((item) => (
-              <div key={item._id} className={styles.barGroup}>
-                <div className={styles.barLabel}>{item._id}</div>
+              <div key={item.date} className={styles.barGroup}>
+                <div className={styles.barLabel}>{item.date}</div>
                 <div className={styles.barWrapper}>
                   <div
                     className={styles.bar}
@@ -65,16 +66,19 @@ function Dashboarddata() {
           </div>
         </div>
 
+        {/* Device-wise Clicks */}
         <div className={styles.clickDevices}>
           <h3>Click Devices</h3>
           <div className={styles.barChart}>
-            {deviceClicks.map((item) => (
-              <div key={item._id} className={styles.barGroup}>
-                <div className={styles.barLabel}>{item._id}</div>
+            {deviceWiseClicks.map((item) => (
+              <div key={item.device} className={styles.barGroup}>
+                <div className={styles.barLabel}>{item.device}</div>
                 <div className={styles.barWrapper}>
                   <div
                     className={styles.bar}
-                    style={{ width: `${(item.clicks / deviceClicks.reduce((acc, curr) => acc + curr.clicks, 0)) * 100}%` }}
+                    style={{
+                      width: `${(item.clicks / deviceWiseClicks.reduce((acc, curr) => acc + curr.clicks, 0)) * 100}%`
+                    }}
                   />
                 </div>
                 <div className={styles.barValue}>{item.clicks}</div>

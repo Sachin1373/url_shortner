@@ -287,59 +287,59 @@ export const getDashboardStats = async (req, res) => {
 
 export const getClickAnalytics = async (req, res) => {
   try {
-    const userId = new mongoose.Types.ObjectId(req.userId); 
-    
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 8;
-    const skip = (page - 1) * limit;
+    const userId = req.userId; // Assuming middleware attaches user
 
-    const clicks = await Click.aggregate([
+    // Get total clicks
+    const totalClicks = await Click.countDocuments({ userId });
+
+    // Get date-wise clicks
+    const dateWiseClicks = await Click.aggregate([
+      { $match: { userId } },
       {
-        $match: { userId: userId } 
-      },
-      {
-        $lookup: {
-          from: 'links',
-          localField: 'linkId',
-          foreignField: '_id',
-          as: 'linkDetails'
+        $group: {
+          _id: {
+            $dateToString: {
+              format: "%Y-%m-%d",
+              date: "$timestamp"
+            }
+          },
+          count: { $sum: 1 }
         }
       },
+      { $sort: { _id: -1 } },
+      { $limit: 7 } // Last 7 days
+    ]);
+
+    // Get device-wise clicks
+    const deviceWiseClicks = await Click.aggregate([
+      { $match: { userId } },
       {
-        $unwind: '$linkDetails'
-      },
-      {
-        $project: {
-          timestamp: 1,
-          originalUrl: '$linkDetails.originalUrl',
-          shortCode: '$linkDetails.shortCode',
-          ipAddress: 1,
-          device: 1
+        $group: {
+          _id: "$device",
+          count: { $sum: 1 }
         }
-      },
-      {
-        $skip: skip
-      },
-      {
-        $limit: limit
       }
     ]);
 
-    const totalClicks = await Click.countDocuments({ userId });
-
-    if (clicks.length === 0) {
-      return res.status(404).json({ message: 'No click data found.' });
-    }
-
     res.json({
-      clicks,
-      pagination: {
-        currentPage: page,
-        totalPages: Math.ceil(totalClicks / limit),
-        totalClicks: totalClicks
+      success: true,
+      data: {
+        totalClicks,
+        dateWiseClicks: dateWiseClicks.map(item => ({
+          date: item._id,
+          clicks: item.count
+        })),
+        deviceWiseClicks: deviceWiseClicks.map(item => ({
+          device: item._id,
+          clicks: item.count
+        }))
       }
     });
+
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({
+      success: false,
+      error: "Error fetching click analytics"
+    });
   }
 };
