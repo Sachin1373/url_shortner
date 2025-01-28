@@ -168,20 +168,19 @@ export const redirectAndTrackClicks = async (req, res) => {
     if (result.device.type === 'mobile') device = 'Mobile';
     else if (result.device.type === 'tablet') device = 'Tablet';
 
-    // Extract the browser name (Chrome, Firefox, etc.) and OS (Android, iOS, Windows, etc.)
+    
     const browser = result.browser.name || 'Unknown Browser';
     const os = result.os.name || 'Unknown OS';
-    const deviceType = result.device.type || 'Unknown Device';
+  
 
     // Track the click with parsed details
     const click = new Click({
       linkId: link._id,
       ipAddress: req.headers['x-forwarded-for']?.split(',')[0] || req.ip,
       userAgent: req.headers['user-agent'],
-      device,
-      browser,
       os,
-      deviceType,
+      device,
+    
     });
 
     await click.save();
