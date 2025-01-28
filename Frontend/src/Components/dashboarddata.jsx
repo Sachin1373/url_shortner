@@ -18,7 +18,7 @@ function Dashboarddata() {
           }
         });
         
-        console.log('Dashboard data:', response.data); // Debugging
+        console.log('Dashboard data:', response.data); 
 
         const { totalClicks, dateWiseClicks, deviceWiseClicks } = response.data.data;
 

@@ -287,7 +287,7 @@ export const getDashboardStats = async (req, res) => {
 
 export const getClickAnalytics = async (req, res) => {
   try {
-    const userId = req.userId; // Assuming middleware attaches user
+    const userId =  mongoose.Types.ObjectId(req.userId);
 
     // Get total clicks
     const totalClicks = await Click.countDocuments({ userId });
