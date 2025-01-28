@@ -253,7 +253,7 @@ export const getDashboardStats = async (req, res) => {
       },
       {
         $group: {
-          _id: { $dateToString: { format: "%d-%m-%Y", date: "$timestamp" } },
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } },
           clicks: { $sum: 1 }
         }
       },
