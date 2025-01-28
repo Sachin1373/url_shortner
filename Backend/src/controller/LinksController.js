@@ -245,7 +245,7 @@ export const getDashboardStats = async (req, res) => {
   try {
     const userId = req.userId; 
 
-    const totalClicks = await Click.countDocuments({ userId: mongoose.Types.ObjectId(userId) });
+    const totalClicks = await Click.countDocuments({ userId });
 
     const dateWiseClicks = await Click.aggregate([
       {
