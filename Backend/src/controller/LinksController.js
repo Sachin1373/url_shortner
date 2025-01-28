@@ -202,13 +202,22 @@ export const getClickAnalytics = async (req, res) => {
       return res.status(400).json({ success: false, error: "Invalid user ID" });
     }
 
-    const userObjectId = mongoose.Types.ObjectId.createFromHexString(userId);
+    // Fetch all the linkIds associated with the user
+    const links = await Link.find({ userId: userId }).select('_id'); // Assuming Link model has a userId field
+
+    if (links.length === 0) {
+      return res.status(404).json({ success: false, error: "No links found for the user" });
+    }
+
+    // Get the list of linkIds
+    const linkIds = links.map(link => link._id);
 
     // Debugging Logs
-    console.log("Fetching analytics for user ID:", userObjectId);
+    console.log("Fetching analytics for user ID:", userId);
+    console.log("Link IDs associated with the user:", linkIds);
 
-    // Get total clicks
-    const totalClicks = await Click.countDocuments({ userId: userObjectId });
+    // Get total clicks across all the links
+    const totalClicks = await Click.countDocuments({ linkId: { $in: linkIds } });
     console.log("Total Clicks:", totalClicks);
 
     if (totalClicks === 0) {
@@ -224,7 +233,7 @@ export const getClickAnalytics = async (req, res) => {
 
     // Get date-wise clicks
     const dateWiseClicks = await Click.aggregate([
-      { $match: { userId: userObjectId } },
+      { $match: { linkId: { $in: linkIds } } },
       {
         $group: {
           _id: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } },
@@ -238,7 +247,7 @@ export const getClickAnalytics = async (req, res) => {
 
     // Get device-wise clicks
     const deviceWiseClicks = await Click.aggregate([
-      { $match: { userId: userObjectId } },
+      { $match: { linkId: { $in: linkIds } } },
       {
         $group: {
           _id: "$device",
