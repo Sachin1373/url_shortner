@@ -168,8 +168,7 @@ export const redirectAndTrackClicks = async (req, res) => {
     if (result.device.type === 'mobile') device = 'Mobile';
     else if (result.device.type === 'tablet') device = 'Tablet';
 
-    // Extract the user ID if available (null for unauthenticated users)
-    const userId = req.userId || null;
+    
 
     // Track the click
     const click = new Click({
@@ -177,7 +176,6 @@ export const redirectAndTrackClicks = async (req, res) => {
       ipAddress: req.headers['x-forwarded-for']?.split(',')[0] || req.ip,
       userAgent: req.headers['user-agent'],
       device,
-      userId,
     });
     await click.save();
 
