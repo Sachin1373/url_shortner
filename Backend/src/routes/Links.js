@@ -25,7 +25,7 @@ router.get('/getclickanalytics', verifyToken, getClickAnalytics);
 router.patch('/:id/status', verifyToken, updateLinkStatus);
 router.patch('/edit/:id', verifyToken, editLink);
 router.delete('/delete/:id', verifyToken, deleteLink);
-router.get('/:shortCode', verifyToken,  redirectAndTrackClicks);
+router.get('/redirect/:shortCode', verifyToken,  redirectAndTrackClicks);
 
 
 export default router;
