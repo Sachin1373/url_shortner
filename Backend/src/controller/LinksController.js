@@ -253,7 +253,7 @@ export const getDashboardStats = async (req, res) => {
       },
       {
         $group: {
-          _id: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } },
+          _id: { $dateToString: { format: "%d-%m-%Y", date: "$timestamp" } },
           clicks: { $sum: 1 }
         }
       },
@@ -287,13 +287,14 @@ export const getDashboardStats = async (req, res) => {
 export const getClickAnalytics = async (req, res) => {
   try {
     const userId = req.userId; 
+    console.log('userId:', userId);
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 8;
     const skip = (page - 1) * limit;
 
     const clicks = await Click.aggregate([
       {
-        $match: { userId } // Filter clicks by userId
+        $match: { userId } 
       },
       {
         $lookup: {
