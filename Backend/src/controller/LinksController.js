@@ -330,7 +330,7 @@ export const getClickAnalytics = async (req, res) => {
     const totalClicks = await Click.countDocuments({ userId });
 
     if (clicks.length === 0) {
-      return res.status(404).json({ message: 'No click data found.' },{id:userId});
+      return res.status(404).json({ message: 'No click data found.' });
     }
 
     res.json({
