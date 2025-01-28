@@ -317,7 +317,7 @@ export const getLinkClicks = async (req, res) => {
     
     const clickData = clicks.map(click => ({
       ipAddress: click.ipAddress,
-      userAgent: click.userAgent,
+      userAgent: click.os,
       timestamp: click.timestamp, // Including timestamp in response
       device: click.device // Adding device info
     }));
