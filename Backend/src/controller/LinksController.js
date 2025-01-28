@@ -291,49 +291,54 @@ export const getClickAnalytics = async (req, res) => {
 
 export const getLinkClicks = async (req, res) => {
   try {
-    
-    const { page = 1, limit = 8 } = req.query; 
+    const { page = 1, limit = 8 } = req.query;
 
-    const link = await Link.findOne({ userId: req.userId });
+    // Fetch all links for the given userId
+    const links = await Link.find({ userId: req.userId });
 
-    if (!link) {
-      return res.status(404).json({ error: 'Link not found for the given userId' });
+    if (links.length === 0) {
+      return res.status(404).json({ message: 'No links found for the given userId' });
     }
 
-    
-    const clicks = await Click.find({ linkId: link._id })
-      .skip((page - 1) * limit) 
-      .limit(parseInt(limit))  
-      .sort({ timestamp: -1 }); 
+    // Prepare a structure to store clicks for each link
+    const results = [];
 
-    const totalClicks = await Click.countDocuments({ linkId: link._id }); 
+    for (const link of links) {
+      // Fetch clicks for the current link
+      const clicks = await Click.find({ linkId: link._id })
+        .skip((page - 1) * limit)
+        .limit(parseInt(limit))
+        .sort({ timestamp: -1 });
 
-    const totalPages = Math.ceil(totalClicks / limit); 
+      // Fetch total clicks count for pagination
+      const totalClicks = await Click.countDocuments({ linkId: link._id });
+      const totalPages = Math.ceil(totalClicks / limit);
 
-    if (clicks.length === 0) {
-      return res.status(404).json({ message: 'No clicks found for this link' });
+      // Map the click data
+      const clickData = clicks.map(click => ({
+        ipAddress: click.ipAddress,
+        userAgent: click.os, // Assuming only OS is stored
+        timestamp: click.timestamp, // Including timestamp
+        device: click.device, // Including device type
+      }));
+
+      // Push the link and its click data to results
+      results.push({
+        originalUrl: link.originalUrl,
+        shortCode: link.shortCode,
+        clicks: clickData,
+        pagination: {
+          totalPages,
+          currentPage: page,
+          totalClicks,
+        },
+      });
     }
 
-    
-    const clickData = clicks.map(click => ({
-      ipAddress: click.ipAddress,
-      userAgent: click.os,
-      timestamp: click.timestamp, // Including timestamp in response
-      device: click.device // Adding device info
-    }));
-
-    // Respond with the paginated results
-    res.json({
-      originalUrl: link.originalUrl,
-      shortCode: link.shortCode,
-      clicks: clickData,
-      pagination: {
-        totalPages: totalPages,
-        currentPage: page,
-        totalClicks: totalClicks
-      }
-    });
+    // Respond with all links and their clicks
+    res.json({ results });
   } catch (error) {
+    console.error('Error fetching links and clicks:', error.message);
     res.status(500).json({ error: error.message });
   }
 };
