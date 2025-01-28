@@ -294,7 +294,7 @@ export const getClickAnalytics = async (req, res) => {
       return res.status(400).json({ success: false, error: "Invalid user ID" });
     }
 
-    const userObjectId = mongoose.Types.ObjectId(userId); // Convert to ObjectId
+    const userObjectId = mongoose.Types.ObjectId.createFromHexString(userId);
 
     // Debugging Logs
     console.log("Fetching analytics for user ID:", userObjectId);
