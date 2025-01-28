@@ -10,13 +10,7 @@ function Redirect() {
   
     const redirect = async () => {
       try {
-        const response = await axios.get(`https://url-shortner-0tbr.onrender.com/api/v1/link/${id}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-         
-        });
+        const response = await axios.get(`https://url-shortner-0tbr.onrender.com/api/v1/link/${id}`);
     
         
         if (response.data.url) {
