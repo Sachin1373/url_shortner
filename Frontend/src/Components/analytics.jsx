@@ -51,11 +51,7 @@ function Analytics() {
     });
   };
 
-  const formatUserAgent = (userAgent) => {
-    const regex = /^[A-Za-z]+\/[0-9\.]+/; 
-    const match = userAgent.match(regex);
-    return match ? match[0] : userAgent; 
-  };
+ 
 
   if (loading) {
     return <div>Loading...</div>; 
@@ -95,7 +91,7 @@ function Analytics() {
               </td>
               <td>{row.ipAddress}</td> 
               <td className={styles.linkCell}>
-                {formatUserAgent(row.userAgent)}
+                {row.userAgent}
               </td>
             </tr>
           ))}

@@ -152,11 +152,11 @@ td:nth-child(7) {
   cursor: not-allowed;
 }
 
-.pagination button:hover:not(:disabled),
+/* .pagination button:hover:not(:disabled),
 .pagination .page-number:hover:not(:disabled) {
   background-color: #007bff;
   color: white;
-}
+} */
 
 .pagination .page-number.active {
   background-color: #007bff;
