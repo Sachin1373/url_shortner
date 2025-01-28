@@ -125,7 +125,7 @@ const LinksTable = ({searchTerm}) => {
                   </span>
                   <Copy
                     className={styles.copyIcon}
-                    onClick={() => copyToClipboard(`https://url-shortner-0tbr.onrender.com/api/v1/link/${link.shortCode}`)}
+                    onClick={() => copyToClipboard(`https://url-shortner-three-sigma.vercel.app/redirect/${link.shortCode}`)}
                     size={30}
                   />
                 </div>
