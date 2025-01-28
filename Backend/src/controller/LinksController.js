@@ -300,19 +300,21 @@ export const getLinkClicks = async (req, res) => {
       return res.status(404).json({ message: 'No links found for the given userId' });
     }
 
-    // Prepare an array to store all click data
     let allClickData = [];
     let totalClicks = 0;
 
-    // For each link, get the associated clicks and calculate the total number of clicks
     for (const link of links) {
-      // Fetch clicks for the current link (paginated)
+      // Log to check the page and limit calculation
+      console.log(`Fetching clicks for link ${link._id}, Page: ${page}, Limit: ${limit}`);
+
       const clicks = await Click.find({ linkId: link._id })
         .skip((page - 1) * limit) // Skip previous pages
         .limit(parseInt(limit)) // Limit to the number of clicks per page
         .sort({ timestamp: -1 }); // Sort by timestamp (most recent first)
 
-      // Map the click data
+      // Log the fetched clicks to see if they're being correctly returned
+      console.log(`Fetched ${clicks.length} clicks for link ${link._id}`);
+
       const clickData = clicks.map(click => ({
         originalUrl: link.originalUrl,
         shortCode: link.shortCode,
@@ -322,20 +324,24 @@ export const getLinkClicks = async (req, res) => {
         device: click.device, // Including device type
       }));
 
-      // Merge the click data into the allClickData array
       allClickData = [...allClickData, ...clickData];
-
+      
       // Count the total clicks for this link
-      totalClicks += await Click.countDocuments({ linkId: link._id });
+      const linkTotalClicks = await Click.countDocuments({ linkId: link._id });
+      totalClicks += linkTotalClicks;
+
+      // Log the total clicks for this link
+      console.log(`Total clicks for link ${link._id}: ${linkTotalClicks}`);
     }
 
-    // Calculate the total pages for pagination
+    // Calculate total pages for pagination
     const totalPages = Math.ceil(totalClicks / limit);
 
     // Paginate the final merged data array (only return clicks for the current page)
     const paginatedData = allClickData.slice((page - 1) * limit, page * limit);
 
-    // Respond with the flattened and paginated data
+    console.log(`Paginated Data: ${paginatedData.length} items`);
+
     res.json({
       clicks: paginatedData,
       pagination: {
@@ -349,3 +355,4 @@ export const getLinkClicks = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
