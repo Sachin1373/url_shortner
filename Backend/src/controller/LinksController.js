@@ -3,6 +3,7 @@ import Link from '../models/LinkSchema.js';
 import Click from '../models/ClickSchema.js';
 import mongoose from 'mongoose';
 import moment from 'moment';
+import { Types } from 'mongoose';
 import {UAParser} from 'ua-parser-js';
 import dotenv from 'dotenv';
 
@@ -286,18 +287,15 @@ export const getDashboardStats = async (req, res) => {
 
 export const getClickAnalytics = async (req, res) => {
   try {
-    const userId = req.userId; 
-    if(userId){
-      return res.status(400).json({ message: `userId found${userId}` });
-    }
-    console.log('userId:', userId);
+    const userId = Types.ObjectId(req.userId); 
+    
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 8;
     const skip = (page - 1) * limit;
 
     const clicks = await Click.aggregate([
       {
-        $match: { userId } 
+        $match: { userId: userId } 
       },
       {
         $lookup: {
