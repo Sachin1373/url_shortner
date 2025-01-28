@@ -287,6 +287,9 @@ export const getDashboardStats = async (req, res) => {
 export const getClickAnalytics = async (req, res) => {
   try {
     const userId = req.userId; 
+    if(!userId){
+      return res.status(400).json({ message: 'No userId found' });
+    }
     console.log('userId:', userId);
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 8;
