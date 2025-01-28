@@ -160,23 +160,30 @@ export const redirectAndTrackClicks = async (req, res) => {
       return res.status(410).json({ error: 'Link is inactive or expired' });
     }
 
-    // Parse the user-agent to determine device type
+    // Parse the user-agent to determine browser, operating system, and device type
     const parser = new UAParser(req.headers['user-agent']);
     const result = parser.getResult();
-    let device = 'Desktop';
 
+    let device = 'Desktop';
     if (result.device.type === 'mobile') device = 'Mobile';
     else if (result.device.type === 'tablet') device = 'Tablet';
 
-    
+    // Extract the browser name (Chrome, Firefox, etc.) and OS (Android, iOS, Windows, etc.)
+    const browser = result.browser.name || 'Unknown Browser';
+    const os = result.os.name || 'Unknown OS';
+    const deviceType = result.device.type || 'Unknown Device';
 
-    // Track the click
+    // Track the click with parsed details
     const click = new Click({
       linkId: link._id,
       ipAddress: req.headers['x-forwarded-for']?.split(',')[0] || req.ip,
       userAgent: req.headers['user-agent'],
       device,
+      browser,
+      os,
+      deviceType,
     });
+
     await click.save();
 
     // Increment the click count for the link
