@@ -149,7 +149,11 @@ export const deleteLink = async (req, res) => {
 // Redirect and track clicks
 export const redirectAndTrackClicks = async (req, res) => {
   try {
-    const link = await Link.findOne({ shortCode: req.params.shortCode });
+    const { shortCode } = req.params; // Get the shortcode from the URL params
+    const { username } = req.query;   // Get the username from the query params
+
+    // Find the link by shortcode
+    const link = await Link.findOne({ shortCode });
 
     if (!link) {
       return res.status(404).json({ error: 'Link not found' });
@@ -160,7 +164,7 @@ export const redirectAndTrackClicks = async (req, res) => {
       return res.status(410).json({ error: 'Link is inactive or expired' });
     }
 
-    // Parse the user-agent to determine device type
+    // Parse the user agent to detect device type
     const parser = new UAParser(req.headers['user-agent']);
     const result = parser.getResult();
     let device = 'Desktop';
@@ -168,121 +172,26 @@ export const redirectAndTrackClicks = async (req, res) => {
     if (result.device.type === 'mobile') device = 'Mobile';
     else if (result.device.type === 'tablet') device = 'Tablet';
 
-    // Extract the user ID if available
-    const userId = req.userId;
-
-    // Track the click
+    // Create a new click document to save the click data
     const click = new Click({
       linkId: link._id,
       ipAddress: req.headers['x-forwarded-for']?.split(',')[0] || req.ip,
       userAgent: req.headers['user-agent'],
       device,
-      userId,
+      username, // Save the username
     });
     await click.save();
 
     // Increment the click count for the link
     await Link.findByIdAndUpdate(link._id, { $inc: { clicks: 1 } });
 
-    // Send the original URL in the response
+    // Send the original URL back to the frontend for redirection
     res.json({ url: link.originalUrl });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-
-// Get analytics for a specific link
-export const getLinkAnalytics = async (req, res) => {
-  try {
-    const link = await Link.findOne({
-      _id: req.params.id,
-      userId: req.userId
-    });
-
-    if (!link) {
-      return res.status(404).json({ error: 'Link not found' });
-    }
-
-    
-    const clicksByDate = await Click.aggregate([
-      { $match: { linkId: link._id } },
-      {
-        $group: {
-          _id: {
-            $dateToString: { format: "%Y-%m-%d", date: "$timestamp" }
-          },
-          count: { $sum: 1 }
-        }
-      },
-      { $sort: { "_id": -1 } }
-    ]);
-
-   
-    const clicksByDevice = await Click.aggregate([
-      { $match: { linkId: link._id } },
-      {
-        $group: {
-          _id: "$device",
-          count: { $sum: 1 }
-        }
-      }
-    ]);
-
-    res.json({
-      totalClicks: link.clicks,
-      clicksByDate,
-      clicksByDevice
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-
-
-
-export const getDashboardStats = async (req, res) => {
-  try {
-    const userId = req.userId; 
-
-    const totalClicks = await Click.countDocuments({ userId });
-
-    const dateWiseClicks = await Click.aggregate([
-      {
-        $match: { userId : userId} 
-      },
-      {
-        $group: {
-          _id: { $dateToString: { format: "%d-%m-%Y", date: "$timestamp" } },
-          clicks: { $sum: 1 }
-        }
-      },
-      { $sort: { _id: -1 } }
-    ]);
-
-    const deviceClicks = await Click.aggregate([
-      {
-        $match: { userId } // Filter by userId
-      },
-      {
-        $group: {
-          _id: "$device",
-          clicks: { $sum: 1 }
-        }
-      }
-    ]);
-
-    res.json({
-      totalClicks,
-      dateWiseClicks,
-      deviceClicks
-    });
-  } catch (error) {
-    console.error("Error fetching stats:", error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-};
 
 
 export const getClickAnalytics = async (req, res) => {

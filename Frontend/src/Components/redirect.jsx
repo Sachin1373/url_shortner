@@ -5,8 +5,8 @@ import { useParams } from 'react-router-dom';
 
 function Redirect() {
     const { id } = useParams();
-    console.log('id:', id);
-
+    const username = localStorage.getItem('username');
+    console.log(username)
     const redirect = async () => {
       try {
         const response = await axios.get(`https://url-shortner-0tbr.onrender.com/api/v1/link/${id}`, {
@@ -14,11 +14,14 @@ function Redirect() {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
+          params: {
+            username: username, 
+          },
         });
     
-        console.log('Redirect response:', response.data); // Debugging
+        console.log('Redirect response:', response.data); 
         if (response.data.url) {
-          window.location.href = response.data.url; // Redirect to the original URL
+          window.location.href = response.data.url; 
         } else {
           alert('Invalid redirect URL');
         }

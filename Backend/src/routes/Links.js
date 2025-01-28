@@ -10,8 +10,6 @@ import {
   getLinksByRemarks,
   redirectAndTrackClicks,
   getClickAnalytics,
-  getDashboardStats,
-  getLinkAnalytics
 } from '../controller/LinksController.js';
 
 const router = express.Router();
@@ -20,13 +18,12 @@ const router = express.Router();
 router.post('/create-link', verifyToken, createLink);
 router.get('/get-links', verifyToken, getLinks);
 router.get('/getlink/:id', verifyToken, getLink);
-router.get('/getdashboardstats', verifyToken, getDashboardStats);
 router.get('/getlinksbyremarks/:remarks', verifyToken, getLinksByRemarks);
 router.get('/getclickanalytics', verifyToken, getClickAnalytics);
 router.patch('/:id/status', verifyToken, updateLinkStatus);
 router.patch('/edit/:id', verifyToken, editLink);
 router.delete('/delete/:id', verifyToken, deleteLink);
 router.get('/:shortCode', verifyToken,  redirectAndTrackClicks);
-router.get('/:id/analytics', verifyToken, getLinkAnalytics);
+
 
 export default router;
