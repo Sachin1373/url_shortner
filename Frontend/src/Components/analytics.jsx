@@ -13,7 +13,7 @@ function Analytics() {
   useEffect(() => {
     const fetchAnalyticsData = async () => {
       try {
-        const response = await axios.get('https://url-shortner-0tbr.onrender.com/api/v1/link/getclickanalytics', {
+        const response = await axios.get('https://url-shortner-0tbr.onrender.com/api/v1/link/getlinkclicks', {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${localStorage.getItem('token')}`

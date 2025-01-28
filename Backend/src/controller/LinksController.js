@@ -272,3 +272,54 @@ export const getClickAnalytics = async (req, res) => {
     });
   }
 };
+
+// Get link clicks
+
+export const getLinkClicks = async (req, res) => {
+  try {
+    const { userId } = req.userId; 
+    const { page = 1, limit = 8 } = req.query; 
+
+    const link = await Link.findOne({ userId: userId });
+
+    if (!link) {
+      return res.status(404).json({ error: 'Link not found for the given userId' });
+    }
+
+    // Pagination logic
+    const clicks = await Click.find({ linkId: link._id })
+      .skip((page - 1) * limit) // Skip records based on current page
+      .limit(parseInt(limit))  // Limit records per page
+      .sort({ timestamp: -1 }); // Optional: Sort by most recent clicks
+
+    const totalClicks = await Click.countDocuments({ linkId: link._id }); // Total clicks for this link
+
+    const totalPages = Math.ceil(totalClicks / limit); // Calculate total pages
+
+    if (clicks.length === 0) {
+      return res.status(404).json({ message: 'No clicks found for this link' });
+    }
+
+    // Map the clicks to include necessary data
+    const clickData = clicks.map(click => ({
+      ipAddress: click.ipAddress,
+      userAgent: click.userAgent,
+      timestamp: click.timestamp, // Including timestamp in response
+      device: click.device // Adding device info
+    }));
+
+    // Respond with the paginated results
+    res.json({
+      originalUrl: link.originalUrl,
+      shortCode: link.shortCode,
+      clicks: clickData,
+      pagination: {
+        totalPages: totalPages,
+        currentPage: page,
+        totalClicks: totalClicks
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
