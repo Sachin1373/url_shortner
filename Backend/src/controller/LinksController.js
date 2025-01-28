@@ -153,32 +153,37 @@ export const redirectAndTrackClicks = async (req, res) => {
       return res.status(404).json({ error: 'Link not found' });
     }
 
+    // Check if the link is active or expired
     if (!link.isActive || (link.expiresAt && new Date() > link.expiresAt)) {
       return res.status(410).json({ error: 'Link is inactive or expired' });
     }
 
+    // Parse the user-agent to determine device type
     const parser = new UAParser(req.headers['user-agent']);
     const result = parser.getResult();
     let device = 'Desktop';
-    
+
     if (result.device.type === 'mobile') device = 'Mobile';
     else if (result.device.type === 'tablet') device = 'Tablet';
 
-    
-    const userId = req.userId; 
+    // Extract the user ID if available
+    const userId = req.userId;
 
+    // Track the click
     const click = new Click({
       linkId: link._id,
       ipAddress: req.headers['x-forwarded-for']?.split(',')[0] || req.ip,
       userAgent: req.headers['user-agent'],
       device,
-      userId 
+      userId,
     });
     await click.save();
 
+    // Increment the click count for the link
     await Link.findByIdAndUpdate(link._id, { $inc: { clicks: 1 } });
 
-    res.redirect(link.originalUrl);
+    // Send the original URL in the response
+    res.json({ url: link.originalUrl });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
