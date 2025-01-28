@@ -277,10 +277,10 @@ export const getClickAnalytics = async (req, res) => {
 
 export const getLinkClicks = async (req, res) => {
   try {
-    const { userId } = req.userId; 
+    // const { userId } = req.userId; 
     const { page = 1, limit = 8 } = req.query; 
 
-    const link = await Link.findOne({ userId: userId });
+    const link = await Link.findOne({ userId: req.userId });
 
     if (!link) {
       return res.status(404).json({ error: 'Link not found for the given userId' });
