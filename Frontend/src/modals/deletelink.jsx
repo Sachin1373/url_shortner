@@ -20,7 +20,7 @@ function Deletelink({closedeletemodal,linkID,refreshLinks}) {
                 Authorization: `Bearer ${localStorage.getItem("token")}`, 
               },
             });
-            console.log('Link deleted:', response.data);
+            
             closedeletemodal();
             refreshLinks();
             toast.success('Link deleted successfully');

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Copy } from "lucide-react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import styles from "../Styles/links.module.css";
 
@@ -10,7 +12,7 @@ function Analytics() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  console.log(data);
+  
 
   useEffect(() => {
     const fetchAnalyticsData = async () => {
@@ -49,7 +51,10 @@ function Analytics() {
     navigator.clipboard
       .writeText(link)
       .then(() => {
-        alert("Short link copied to clipboard!");
+        toast.success("Short link copied to clipboard!", {
+          position: "bottom-left",
+          autoClose: 500,
+        });
       })
       .catch((err) => {
         console.error("Error copying text: ", err);
@@ -67,6 +72,7 @@ function Analytics() {
   return (
     <>
       <table className={styles.linksTable}>
+        <ToastContainer />
         <thead>
           <tr>
             <th>Timestamp</th>

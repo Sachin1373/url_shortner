@@ -18,7 +18,7 @@ function Dashboarddata() {
           }
         });
         
-        console.log('Dashboard data:', response.data); 
+       
 
         const { totalClicks, dateWiseClicks, deviceWiseClicks } = response.data.data;
 
@@ -49,7 +49,7 @@ function Dashboarddata() {
       </div>
 
       <div className={styles.charts}>
-        {/* Date-wise Clicks */}
+        
         <div className={styles.dateWiseClicks}>
           <h3>Date-wise Clicks</h3>
           <div className={styles.barChart}>
@@ -68,7 +68,7 @@ function Dashboarddata() {
           </div>
         </div>
 
-        {/* Device-wise Clicks */}
+       
         <div className={styles.clickDevices}>
           <h3>Click Devices</h3>
           <div className={styles.barChart}>

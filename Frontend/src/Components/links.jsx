@@ -3,6 +3,8 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { MdEdit } from "react-icons/md";
 import Editlink from "../modals/editlink";
 import { Copy } from "lucide-react";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Deletelink from "../modals/deletelink";
 import axios from "axios";
 import styles from "../Styles/links.module.css";
@@ -42,7 +44,11 @@ const LinksTable = ({searchTerm}) => {
     navigator.clipboard
       .writeText(link)
       .then(() => {
-        alert("Short link copied to clipboard!");
+        toast.success("Short link copied to clipboard!", {
+          position: "bottom-left",
+          autoClose: 500,
+        }
+        );
       })
       .catch((err) => {
         console.error("Error copying text: ", err);
@@ -102,6 +108,7 @@ const LinksTable = ({searchTerm}) => {
   return (
     <>
       <table className={styles.linksTable}>
+        <ToastContainer />
         <thead>
           <tr>
             <th>Date</th>
@@ -121,7 +128,7 @@ const LinksTable = ({searchTerm}) => {
               <td className={styles.linkCell}>
                 <div className={styles.linkContainer}>
                   <span className={styles.shortLinkText}>
-                  https://url-shortner-0tbr.onrender.com/{link.shortCode}
+                  https://url-shortner.com/{link.shortCode}
                   </span>
                   <Copy
                     className={styles.copyIcon}
@@ -173,6 +180,8 @@ const LinksTable = ({searchTerm}) => {
             {">"}
           </button>
       </div>
+
+      
 
     </>
   );
