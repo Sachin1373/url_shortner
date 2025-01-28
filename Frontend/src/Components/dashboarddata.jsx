@@ -17,6 +17,8 @@ function Dashboarddata() {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });
+        
+        console.log('Dashboard data:', response.data); // Debugging
 
         const { totalClicks, dateWiseClicks, deviceWiseClicks } = response.data.data;
 
