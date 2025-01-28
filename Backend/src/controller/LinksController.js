@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid';
 import Link from '../models/LinkSchema.js';
 import Click from '../models/ClickSchema.js';
+import mongoose from 'mongoose';
 import moment from 'moment';
 import {UAParser} from 'ua-parser-js';
 import dotenv from 'dotenv';
