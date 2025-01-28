@@ -302,7 +302,9 @@ export const getLinkClicks = async (req, res) => {
 
     // Prepare an array to store all click data
     let allClickData = [];
+    let totalClicks = 0;
 
+    // For each link, get the associated clicks and calculate the total number of clicks
     for (const link of links) {
       // Fetch clicks for the current link
       const clicks = await Click.find({ linkId: link._id })
@@ -322,10 +324,12 @@ export const getLinkClicks = async (req, res) => {
 
       // Merge the click data into the allClickData array
       allClickData = [...allClickData, ...clickData];
+
+      // Count the total clicks for this link
+      totalClicks += await Click.countDocuments({ linkId: link._id });
     }
 
-    // Fetch total clicks count for pagination (considering all links)
-    const totalClicks = await Click.countDocuments({ linkId: links._id });
+    // Calculate the total pages for pagination
     const totalPages = Math.ceil(totalClicks / limit);
 
     // Respond with the flattened data
