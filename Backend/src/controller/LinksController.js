@@ -300,8 +300,8 @@ export const getLinkClicks = async (req, res) => {
       return res.status(404).json({ message: 'No links found for the given userId' });
     }
 
-    // Prepare a structure to store clicks for each link
-    const results = [];
+    // Prepare an array to store all click data
+    let allClickData = [];
 
     for (const link of links) {
       // Fetch clicks for the current link
@@ -309,10 +309,6 @@ export const getLinkClicks = async (req, res) => {
         .skip((page - 1) * limit)
         .limit(parseInt(limit))
         .sort({ timestamp: -1 });
-
-      // Fetch total clicks count for pagination
-      const totalClicks = await Click.countDocuments({ linkId: link._id });
-      const totalPages = Math.ceil(totalClicks / limit);
 
       // Map the click data
       const clickData = clicks.map(click => ({
@@ -324,21 +320,23 @@ export const getLinkClicks = async (req, res) => {
         device: click.device, // Including device type
       }));
 
-      // Push the link and its click data to results
-      results.push({
-        // originalUrl: link.originalUrl,
-        // shortCode: link.shortCode,
-        clicks: clickData,
-        pagination: {
-          totalPages,
-          currentPage: page,
-          totalClicks,
-        },
-      });
+      // Merge the click data into the allClickData array
+      allClickData = [...allClickData, ...clickData];
     }
 
-    // Respond with all links and their clicks
-    res.json({ results });
+    // Fetch total clicks count for pagination (considering all links)
+    const totalClicks = await Click.countDocuments({ userId: req.userId });
+    const totalPages = Math.ceil(totalClicks / limit);
+
+    // Respond with the flattened data
+    res.json({
+      clicks: allClickData,
+      pagination: {
+        totalPages,
+        currentPage: page,
+        totalClicks,
+      },
+    });
   } catch (error) {
     console.error('Error fetching links and clicks:', error.message);
     res.status(500).json({ error: error.message });
