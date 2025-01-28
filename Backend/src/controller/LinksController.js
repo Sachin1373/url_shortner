@@ -287,59 +287,79 @@ export const getDashboardStats = async (req, res) => {
 
 export const getClickAnalytics = async (req, res) => {
   try {
-    const userId =  mongoose.Types.ObjectId(req.userId);
+    const userId = req.userId;
+
+    // Validate userId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ success: false, error: "Invalid user ID" });
+    }
+
+    const userObjectId = mongoose.Types.ObjectId(userId); // Convert to ObjectId
+
+    // Debugging Logs
+    console.log("Fetching analytics for user ID:", userObjectId);
 
     // Get total clicks
-    const totalClicks = await Click.countDocuments({ userId });
+    const totalClicks = await Click.countDocuments({ userId: userObjectId });
+    console.log("Total Clicks:", totalClicks);
+
+    if (totalClicks === 0) {
+      return res.json({
+        success: true,
+        data: {
+          totalClicks: 0,
+          dateWiseClicks: [],
+          deviceWiseClicks: [],
+        },
+      });
+    }
 
     // Get date-wise clicks
     const dateWiseClicks = await Click.aggregate([
-      { $match: { userId } },
+      { $match: { userId: userObjectId } },
       {
         $group: {
-          _id: {
-            $dateToString: {
-              format: "%Y-%m-%d",
-              date: "$timestamp"
-            }
-          },
-          count: { $sum: 1 }
-        }
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } },
+          count: { $sum: 1 },
+        },
       },
       { $sort: { _id: -1 } },
-      { $limit: 7 } // Last 7 days
+      { $limit: 7 },
     ]);
+    console.log("Date-wise Clicks:", dateWiseClicks);
 
     // Get device-wise clicks
     const deviceWiseClicks = await Click.aggregate([
-      { $match: { userId } },
+      { $match: { userId: userObjectId } },
       {
         $group: {
           _id: "$device",
-          count: { $sum: 1 }
-        }
-      }
+          count: { $sum: 1 },
+        },
+      },
     ]);
+    console.log("Device-wise Clicks:", deviceWiseClicks);
 
+    // Return success response
     res.json({
       success: true,
       data: {
         totalClicks,
-        dateWiseClicks: dateWiseClicks.map(item => ({
+        dateWiseClicks: dateWiseClicks.map((item) => ({
           date: item._id,
-          clicks: item.count
+          clicks: item.count,
         })),
-        deviceWiseClicks: deviceWiseClicks.map(item => ({
+        deviceWiseClicks: deviceWiseClicks.map((item) => ({
           device: item._id,
-          clicks: item.count
-        }))
-      }
+          clicks: item.count,
+        })),
+      },
     });
-
   } catch (error) {
+    console.error("Error fetching analytics:", error); // Log full error
     res.status(500).json({
       success: false,
-      error: "Error fetching click analytics"
+      error: error.message || "Error fetching click analytics",
     });
   }
 };
