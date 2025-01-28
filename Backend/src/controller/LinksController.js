@@ -243,70 +243,57 @@ export const getLinkAnalytics = async (req, res) => {
 
 export const getDashboardStats = async (req, res) => {
   try {
-    const userId = req.userId; // Ensure this is coming from middleware
-    if (!userId) {
-      return res.status(400).json({ message: "User ID not found in request" });
-    }
+    const userId = req.userId; // Extract user ID from the request
 
-    console.log("User ID:", userId); // Debugging
+    const totalClicks = await Click.countDocuments({ userId: mongoose.Types.ObjectId(userId) });
 
-    // Total Clicks
-    const totalClicks = await Click.countDocuments({
-      userId: mongoose.Types.ObjectId(userId),
-    });
-    console.log("Total Clicks:", totalClicks); // Debugging
-
-    // Date-wise Clicks
     const dateWiseClicks = await Click.aggregate([
       {
-        $match: { userId: mongoose.Types.ObjectId(userId) },
+        $match: { userId: mongoose.Types.ObjectId(userId) } // Filter by userId
       },
       {
         $group: {
           _id: { $dateToString: { format: "%d-%m-%Y", date: "$timestamp" } },
-          clicks: { $sum: 1 },
-        },
+          clicks: { $sum: 1 }
+        }
       },
-      { $sort: { _id: -1 } },
+      { $sort: { _id: -1 } }
     ]);
-    console.log("Date-wise Clicks:", dateWiseClicks); // Debugging
 
-    // Device-wise Clicks
     const deviceClicks = await Click.aggregate([
       {
-        $match: { userId: mongoose.Types.ObjectId(userId) },
+        $match: { userId: mongoose.Types.ObjectId(userId) } // Filter by userId
       },
       {
         $group: {
           _id: "$device",
-          clicks: { $sum: 1 },
-        },
-      },
+          clicks: { $sum: 1 }
+        }
+      }
     ]);
-    console.log("Device-wise Clicks:", deviceClicks); // Debugging
 
     res.json({
       totalClicks,
       dateWiseClicks,
-      deviceClicks,
+      deviceClicks
     });
   } catch (error) {
-    console.error("Error fetching stats:", error); // Debugging
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error("Error fetching stats:", error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
 
 export const getClickAnalytics = async (req, res) => {
   try {
-    const userId = req.userId; 
+    const userId = req.userId; // Extract user ID from the request (e.g., from JWT token)
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 8;
     const skip = (page - 1) * limit;
 
     const clicks = await Click.aggregate([
       {
-        $match: { userId: mongoose.Types.ObjectId(userId) } 
+        $match: { userId: mongoose.Types.ObjectId(userId) } // Filter clicks by userId
       },
       {
         $lookup: {
