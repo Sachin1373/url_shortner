@@ -18,7 +18,7 @@ function Redirect() {
          
         });
     
-        console.log('Redirect response:', response.data); 
+        
         if (response.data.url) {
           window.location.href = response.data.url; 
         } else {
@@ -26,7 +26,7 @@ function Redirect() {
         }
       } catch (error) {
         console.error('Error redirecting:', error.message);
-        toast.error(error.message);
+        toast.error(error.response?.data?.error || 'An error occurred while redirecting');
       }
     };
 
