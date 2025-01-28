@@ -18,7 +18,7 @@ databaseconnect()
 
 const corsOptions = {
     origin: ['https://url-shortner-three-sigma.vercel.app','http://localhost:5174'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],          
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],          
     credentials: true,                                 
   };
 
