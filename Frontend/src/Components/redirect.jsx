@@ -10,8 +10,12 @@ function Redirect() {
   
     const redirect = async () => {
       try {
-        const response = await axios.get(`https://url-shortner-0tbr.onrender.com/api/v1/link/${id}`);
-    
+        const response = await axios.get(`https://url-shortner-0tbr.onrender.com/api/v1/link/redirect/${id}`, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+      });
+      
         
         if (response.data.url) {
           window.location.href = response.data.url; 
