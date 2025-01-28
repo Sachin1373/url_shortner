@@ -250,7 +250,7 @@ export const getDashboardStats = async (req, res) => {
 
     const dateWiseClicks = await Click.aggregate([
       {
-        $match: { userId} 
+        $match: { userId : userId} 
       },
       {
         $group: {
@@ -287,7 +287,7 @@ export const getDashboardStats = async (req, res) => {
 
 export const getClickAnalytics = async (req, res) => {
   try {
-    const userId = Types.ObjectId(req.userId); 
+    const userId = new mongoose.Types.ObjectId(req.userId); 
     
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 8;
