@@ -316,6 +316,8 @@ export const getLinkClicks = async (req, res) => {
 
       // Map the click data
       const clickData = clicks.map(click => ({
+        originalUrl: link.originalUrl,
+        shortCode: link.shortCode,
         ipAddress: click.ipAddress,
         userAgent: click.os, // Assuming only OS is stored
         timestamp: click.timestamp, // Including timestamp
@@ -324,8 +326,8 @@ export const getLinkClicks = async (req, res) => {
 
       // Push the link and its click data to results
       results.push({
-        originalUrl: link.originalUrl,
-        shortCode: link.shortCode,
+        // originalUrl: link.originalUrl,
+        // shortCode: link.shortCode,
         clicks: clickData,
         pagination: {
           totalPages,
