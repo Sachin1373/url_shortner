@@ -243,13 +243,13 @@ export const getLinkAnalytics = async (req, res) => {
 
 export const getDashboardStats = async (req, res) => {
   try {
-    const userId = req.userId; // Extract user ID from the request
+    const userId = req.userId; 
 
     const totalClicks = await Click.countDocuments({ userId: mongoose.Types.ObjectId(userId) });
 
     const dateWiseClicks = await Click.aggregate([
       {
-        $match: { userId: mongoose.Types.ObjectId(userId) } // Filter by userId
+        $match: { userId} 
       },
       {
         $group: {
@@ -262,7 +262,7 @@ export const getDashboardStats = async (req, res) => {
 
     const deviceClicks = await Click.aggregate([
       {
-        $match: { userId: mongoose.Types.ObjectId(userId) } // Filter by userId
+        $match: { userId } // Filter by userId
       },
       {
         $group: {
@@ -286,14 +286,14 @@ export const getDashboardStats = async (req, res) => {
 
 export const getClickAnalytics = async (req, res) => {
   try {
-    const userId = req.userId; // Extract user ID from the request (e.g., from JWT token)
+    const userId = req.userId; 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 8;
     const skip = (page - 1) * limit;
 
     const clicks = await Click.aggregate([
       {
-        $match: { userId: mongoose.Types.ObjectId(userId) } // Filter clicks by userId
+        $match: { userId } // Filter clicks by userId
       },
       {
         $lookup: {
@@ -323,7 +323,7 @@ export const getClickAnalytics = async (req, res) => {
       }
     ]);
 
-    const totalClicks = await Click.countDocuments({ userId: mongoose.Types.ObjectId(userId) });
+    const totalClicks = await Click.countDocuments({ userId });
 
     if (clicks.length === 0) {
       return res.status(404).json({ message: 'No click data found.' });
