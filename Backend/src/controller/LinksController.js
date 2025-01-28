@@ -325,7 +325,7 @@ export const getLinkClicks = async (req, res) => {
     }
 
     // Fetch total clicks count for pagination (considering all links)
-    const totalClicks = await Click.countDocuments({ userId: req.userId });
+    const totalClicks = await Click.countDocuments({ linkId: links._id });
     const totalPages = Math.ceil(totalClicks / limit);
 
     // Respond with the flattened data
