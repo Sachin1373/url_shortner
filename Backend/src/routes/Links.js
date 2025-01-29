@@ -4,7 +4,6 @@ import {
   createLink,
   getLinks,
   getLink,
-  updateLinkStatus,
   deleteLink,
   editLink,
   getLinksByRemarks,
@@ -22,7 +21,6 @@ router.get('/getlink/:id', verifyToken, getLink);
 router.get('/getlinkclicks', verifyToken, getLinkClicks);
 router.get('/getlinksbyremarks/:remarks', verifyToken, getLinksByRemarks);
 router.get('/getclickanalytics', verifyToken, getClickAnalytics);
-router.patch('/:id/status', verifyToken, updateLinkStatus);
 router.patch('/edit/:id', verifyToken, editLink);
 router.delete('/delete/:id', verifyToken, deleteLink);
 router.get('/redirect/:shortCode', redirectAndTrackClicks);

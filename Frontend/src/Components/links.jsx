@@ -9,7 +9,7 @@ import Deletelink from "../modals/deletelink";
 import axios from "axios";
 import styles from "../Styles/links.module.css";
 
-const LinksTable = ({searchTerm}) => {
+const LinksTable = ({ searchTerm }) => {
   const [deletemodal, setdeletemodal] = useState(false);
   const [editlinkmodal, seteditlinkmodal] = useState(false);
   const [links, setLinks] = useState([]);
@@ -22,8 +22,6 @@ const LinksTable = ({searchTerm}) => {
     setLinkID(linkID);
     seteditlinkmodal(true);
   };
-
-
 
   const closeeditlinkmodal = () => {
     setLinkID("");
@@ -47,8 +45,7 @@ const LinksTable = ({searchTerm}) => {
         toast.success("Short link copied to clipboard!", {
           position: "bottom-left",
           autoClose: 500,
-        }
-        );
+        });
       })
       .catch((err) => {
         console.error("Error copying text: ", err);
@@ -72,34 +69,10 @@ const LinksTable = ({searchTerm}) => {
       setLoading(false);
     }
   };
-  
-  const searchbyremarks = async (remarks) => {
-    setLoading(true);
-    try {
-      const response = await axios.get(`https://url-shortner-0tbr.onrender.com/api/v1/link/getlinksbyremarks/${remarks}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-     
-      setLinks(Array.isArray(response.data.links) ? response.data.links : []);
-    } catch (error) {
-      console.error("Error fetching links by remarks:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-
 
   useEffect(() => {
-    if (searchTerm) {
-      searchbyremarks(searchTerm);
-    } else {
-      fetchLinks(currentPage);
-    }
-  }, [searchTerm, currentPage]);
-
-
- 
+    fetchLinks(currentPage);
+  }, [currentPage]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -121,35 +94,40 @@ const LinksTable = ({searchTerm}) => {
           </tr>
         </thead>
         <tbody>
-          {links.map((link, index) => (
-            <tr key={index}>
-              <td>{new Date(link.createdAt).toLocaleString()}</td>
-              <td className={styles.linkCell}>{link.originalUrl}</td>
-              <td className={styles.linkCell}>
-                <div className={styles.linkContainer}>
-                  <span className={styles.shortLinkText}>
-                  https://url-shortner.com/{link.shortCode}
-                  </span>
-                  <Copy
-                    className={styles.copyIcon}
-                    onClick={() => copyToClipboard(`https://url-shortner-three-sigma.vercel.app/redirect/${link.shortCode}`)}
-                    size={30}
-                  />
-                </div>
-              </td>
-              <td>{link.remarks}</td>
-              <td>{link.clicks}</td>
-              <td className={link.isActive ? styles.active : styles.inactive}>
-                {link.isActive ? "Active" : "Inactive"}
-              </td>
-              <td>
-                <div className={styles.actions}>
-                  <MdEdit className={styles.edit} onClick={() => openeditlinkmodal(link._id)} />
-                  <RiDeleteBin6Line className={styles.delete} onClick={() => opendeletemodal(link._id)} />
-                </div>
-              </td>
-            </tr>
-          ))}
+          {links.map((link, index) => {
+            const isExpired = link.expiresAt ? new Date(link.expiresAt).getTime() < Date.now() : false;
+           
+            return (
+              <tr key={index}>
+                <td>{new Date(link.createdAt).toLocaleString()}</td>
+                <td className={styles.linkCell}>{link.originalUrl}</td>
+                <td className={styles.linkCell}>
+                  <div className={styles.linkContainer}>
+                    <span className={styles.shortLinkText}>
+                      https://url-shortner.com/{link.shortCode}
+                    </span>
+                    <Copy
+                      className={`${styles.copyIcon} ${isExpired ? styles.disabled : ""}`}
+                      onClick={() => !isExpired && copyToClipboard(`https://url-shortner-three-sigma.vercel.app/redirect/${link.shortCode}`)}
+                      size={30}
+                      style={{ cursor: isExpired ? "not-allowed" : "pointer", opacity: isExpired ? 0.5 : 1 }}
+                    />
+                  </div>
+                </td>
+                <td>{link.remarks}</td>
+                <td>{link.clicks}</td>
+                <td className={isExpired ? styles.inactive : link.isActive ? styles.active : styles.inactive}>
+                  {isExpired ? "Inactive" : link.isActive ? "Active" : "Inactive"}
+                </td>
+                <td>
+                  <div className={styles.actions}>
+                    <MdEdit className={styles.edit} onClick={() => openeditlinkmodal(link._id)} />
+                    <RiDeleteBin6Line className={styles.delete} onClick={() => opendeletemodal(link._id)} />
+                  </div>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
 
@@ -157,32 +135,22 @@ const LinksTable = ({searchTerm}) => {
       {deletemodal && <Deletelink closedeletemodal={closedeletemodal} linkID={linkID} refreshLinks={fetchLinks} />}
 
       <div className={styles.pagination}>
+        <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
+          {"<"}
+        </button>
+        {Array.from({ length: totalPages }, (_, index) => index + 1).map(page => (
           <button
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
+            key={page}
+            className={`${styles.pageNumber} ${currentPage === page ? styles.active : ''}`}
+            onClick={() => setCurrentPage(page)}
           >
-            {"<"}
+            {page}
           </button>
-          {Array.from({ length: totalPages }, (_, index) => index + 1).map(page => (
-            <button
-              key={page}
-              className={`${styles.pageNumber} ${currentPage === page ? styles.active : ''}`}
-              onClick={() => setCurrentPage(page)}
-            >
-              {page}
-            </button>
-          ))}
-
-          <button
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-          >
-            {">"}
-          </button>
+        ))}
+        <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
+          {">"}
+        </button>
       </div>
-
-      
-
     </>
   );
 };
