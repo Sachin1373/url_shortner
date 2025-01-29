@@ -2,8 +2,6 @@ import { nanoid } from 'nanoid';
 import Link from '../models/LinkSchema.js';
 import Click from '../models/ClickSchema.js';
 import mongoose from 'mongoose';
-import moment from 'moment';
-import { Types } from 'mongoose';
 import {UAParser} from 'ua-parser-js';
 import dotenv from 'dotenv';
 
@@ -99,22 +97,6 @@ export const getLinksByRemarks = async (req, res) => {
 };
 
 
-
-
-
-export const updateLinkStatus = async (req, res) => {
-  try {
-    const { isActive } = req.body;
-    const link = await Link.findOneAndUpdate(
-      { _id: req.params.id, userId: req.userId },
-      { isActive },
-      { new: true }
-    );
-    res.json(link);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
 
 
 export const editLink = async (req, res) => {
