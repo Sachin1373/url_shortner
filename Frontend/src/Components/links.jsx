@@ -12,11 +12,20 @@ import styles from "../Styles/links.module.css";
 const LinksTable = ({ searchTerm }) => {
   const [deletemodal, setdeletemodal] = useState(false);
   const [editlinkmodal, seteditlinkmodal] = useState(false);
+  const [refreshLinks, setRefreshLinks] = useState(false);
   const [links, setLinks] = useState([]);
   const [linkID, setLinkID] = useState("");
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [debouncedSearch, setDebouncedSearch] = useState(searchTerm);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 1000);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
 
   const openeditlinkmodal = (linkID) => {
     setLinkID(linkID);
@@ -70,9 +79,27 @@ const LinksTable = ({ searchTerm }) => {
     }
   };
 
+  const searchbyremarks = async (remarks) => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`https://url-shortner-0tbr.onrender.com/api/v1/link/getlinksbyremarks/${remarks}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      setLinks(Array.isArray(response.data.links) ? response.data.links : []);
+    } catch (error) {
+      console.error("Error fetching links by remarks:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetchLinks(currentPage);
-  }, [currentPage]);
+    if (debouncedSearch) {
+      searchbyremarks(debouncedSearch);
+    } else {
+      fetchLinks(currentPage);
+    }
+  }, [debouncedSearch, currentPage ]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -95,8 +122,8 @@ const LinksTable = ({ searchTerm }) => {
         </thead>
         <tbody>
           {links.map((link, index) => {
-            const isExpired = link.expiresAt ? new Date(link.expiresAt).getTime() < Date.now() : false;
-           
+            const isExpired = link.expiresAt ? new Date(link.expiresAt) < new Date() : false;
+
             return (
               <tr key={index}>
                 <td>{new Date(link.createdAt).toLocaleString()}</td>
@@ -135,21 +162,13 @@ const LinksTable = ({ searchTerm }) => {
       {deletemodal && <Deletelink closedeletemodal={closedeletemodal} linkID={linkID} refreshLinks={fetchLinks} />}
 
       <div className={styles.pagination}>
-        <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>
-          {"<"}
-        </button>
+        <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1}>{"<"}</button>
         {Array.from({ length: totalPages }, (_, index) => index + 1).map(page => (
-          <button
-            key={page}
-            className={`${styles.pageNumber} ${currentPage === page ? styles.active : ''}`}
-            onClick={() => setCurrentPage(page)}
-          >
+          <button key={page} className={`${styles.pageNumber} ${currentPage === page ? styles.active : ''}`} onClick={() => setCurrentPage(page)}>
             {page}
           </button>
         ))}
-        <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>
-          {">"}
-        </button>
+        <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages}>{">"}</button>
       </div>
     </>
   );
